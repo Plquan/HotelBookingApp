@@ -1,5 +1,5 @@
 import { Stack } from 'expo-router';
-import CheckRoomScreen from '@/components/screens/CheckRoom';
+import CheckRoomScreen from '@/components/screens/booking';
 
 export default function Layout() {
   return (
@@ -9,8 +9,13 @@ export default function Layout() {
        
         options={{
           headerShown: false,
-          title: "Tìm phòng",  
-          headerBackTitle: "Quay lại", 
+        }}
+      />
+       <Stack.Screen
+        name="roomDetail"
+       
+        options={{
+          headerShown: false,
         }}
       />
     </Stack>

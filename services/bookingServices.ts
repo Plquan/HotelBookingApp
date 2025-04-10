@@ -13,8 +13,18 @@ const checkRoom = async (params: ICheckDate): Promise<IResponseBase<IRoomTypeDat
     }
   };
   
+const getRoomDetail = async (id: number): Promise<IResponseBase<IRoomTypeData> | undefined> => {
+  try {
+     const response: IResponseBase<IRoomTypeData> = await http.get(`/api/RoomType/GetById/${id}`)
+     return response
+  } catch (error: any) {
+    console.log("API lỗi", error.response?.data || error.message);
+    return undefined;
+  }
+}  
   
 const bookingServices = {
-    checkRoom
+    checkRoom,
+    getRoomDetail
 }
 export default bookingServices

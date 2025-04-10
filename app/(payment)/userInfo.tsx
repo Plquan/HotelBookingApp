@@ -1,7 +1,6 @@
 import { useNavigation } from "expo-router";
 import { useEffect } from "react";
-import UserInfoScreen from "@/components/screens/Payment/userInfo";
-import { title } from "process";
+import UserInfoScreen from "@/components/screens/booking/userInfo";
 
 export default function UserInfo() {
   const navigation = useNavigation();

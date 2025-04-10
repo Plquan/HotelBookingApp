@@ -36,7 +36,7 @@ export default function HomeScreen() {
           dispatch(bookingAction.setFromDate(new Date(fromDate).toISOString()));
           dispatch(bookingAction.setToDate(new Date(toDate).toISOString()));
 
-            router.navigate("/(checkroom)/findRoom");
+            router.navigate("/(booking)/findRoom");
         };
 
 

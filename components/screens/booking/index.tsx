@@ -20,6 +20,7 @@ import { RootState } from '@/stores/index';
 import bookingServices from '@/services/bookingServices';
 import { IRoomTypeData } from '@/interfaces/roomType/IRoomDTO';
 import env from '@/constants/envConstant';
+import { useNavigation } from "@react-navigation/native";
 export default function CheckRoomScreen() {
   const fromDateStore = useSelector((state: RootState) => state.bookingStore.fromDate);
   const toDateStore = useSelector((state: RootState) => state.bookingStore.toDate);
@@ -31,6 +32,7 @@ export default function CheckRoomScreen() {
   const [availableRooms, setAvailableRooms] = useState<IRoomTypeData[]>([]);
   const [personCount, setPersonCount] = useState('2');
   const [hotelData, setHotelData] = useState<IRoomTypeData[]>([]);
+  const navigation = useNavigation();
 
   const router = useRouter();
 
@@ -94,7 +96,11 @@ export default function CheckRoomScreen() {
   };
 
   const renderHotelItem = ({ item }: { item: IRoomTypeData }) => (
-    <View style={styles.hotelItem}>
+   <TouchableOpacity
+   activeOpacity={0.8}
+   onPress={() => router.push(`/(booking)/roomDetail?id=${item.id}`)}
+   >
+  <View style={styles.hotelItem}>
       <View style={styles.hotelItemContent}>
         {/* Left side - Image */}
         <View style={styles.hotelImageContainer}>
@@ -161,6 +167,10 @@ export default function CheckRoomScreen() {
       {/* Divider line */}
       <View style={styles.divider} />
     </View>
+
+</TouchableOpacity>
+
+    
   );
 
   return (
@@ -174,7 +184,7 @@ export default function CheckRoomScreen() {
             <TouchableOpacity onPress={handleBack}>
               <Ionicons name="chevron-back" size={24} color="white" />
             </TouchableOpacity>
-            <Text style={styles.headerTitle}>Xung quanh vị trí hiện tại</Text>
+            <Text style={styles.headerTitle}>Phòng trống hiện tại</Text>
           </View>
           <Text style={styles.headerDates}>{formatDateRange()}</Text>
         </View>
@@ -191,6 +201,13 @@ export default function CheckRoomScreen() {
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.listContainer}
       />
+
+     {/* Bottom Booking Button with gray background wrapper */}
+      <View style={styles.bookingButtonWrapper}>
+        <TouchableOpacity style={styles.bookingButton}>
+          <Text style={styles.bookingButtonText}>Đặt phòng ngay</Text>
+        </TouchableOpacity>
+      </View>
 
       {/* Date Picker Modal */}
       <Modal
@@ -255,7 +272,7 @@ export default function CheckRoomScreen() {
               style={styles.applyButton} 
               onPress={toggleDatePickerModal}
             >
-              <Text style={styles.applyButtonText}>ĐẶT PHÒNG</Text>
+              <Text style={styles.applyButtonText}>ÁO DỤNG THAY ĐỔI</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -533,5 +550,31 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  bookingButton: {
+    backgroundColor: '#b58e50',
+    paddingVertical: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    marginBottom:40,
+    marginTop:8
+  },
+  bookingButtonWrapper: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#333',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#444',
+
+  },
+  bookingButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
