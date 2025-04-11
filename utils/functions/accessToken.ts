@@ -1,19 +1,26 @@
-import env from "@/constants/envConstant";
-import { getCookie , setCookie , removeCookie } from "../cookies/cookies"
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const getAccessToken = async () : Promise<string | undefined> => {
-    return await getCookie(env.ACCESS_TOKEN);
-}
-const setAccessToken = async (token : string) : Promise<void> => {
-    await setCookie(env.ACCESS_TOKEN , token);
-}
-const deleteAccessToken = async () : Promise<void> => {
-    await removeCookie(env.ACCESS_TOKEN);
-}
+const getAccessToken = async (): Promise<string | undefined> => {
+  try {
+    const accessToken = await AsyncStorage.getItem("accessToken");
+    return accessToken ?? undefined;
+  } catch (error) {
+    console.error("Lỗi khi lấy accessToken:", error);
+    return undefined;
+  }
+};
+
+const removeAccessToken = async (): Promise<void> => {
+    try {
+      await AsyncStorage.removeItem("accessToken");
+      console.log("Đã xóa accessToken thành công");
+    } catch (error) {
+      console.error("Lỗi khi xóa accessToken:", error);
+    }
+  };
 
 const accessToken = {
     getAccessToken,
-    setAccessToken,
-    deleteAccessToken
-}
-export default accessToken
+    removeAccessToken
+}  
+export default accessToken;

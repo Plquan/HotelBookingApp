@@ -1,4 +1,4 @@
-import CheckRoomScreen from '@/components/screens/booking/index';
+import CheckRoomScreen from '@/components/screens/booking/CheckRoom/index';
 import RoomDetailScreen from '@/components/screens/booking/RoomDetail';
 import { Stack } from 'expo-router';
 

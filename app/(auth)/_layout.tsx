@@ -5,14 +5,14 @@ export default function Layout() {
   return (
     <Stack>
       <Stack.Screen
-        name="findRoom"
+        name="login"
        
         options={{
           headerShown: false,
         }}
       />
        <Stack.Screen
-        name="roomDetail"
+        name="register"
        
         options={{
           headerShown: false,

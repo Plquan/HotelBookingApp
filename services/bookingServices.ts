@@ -8,8 +8,7 @@ const checkRoom = async (params: ICheckDate): Promise<IResponseBase<IRoomTypeDat
       const response : IResponseBase<IRoomTypeData[]> = await http.post("/api/Booking/CheckRoom",params)
       return response;
     } catch (error: any) {
-      console.log("API lỗi", error.response?.data || error.message);
-      return undefined;
+      throw error.response.data;
     }
   };
   
@@ -18,8 +17,7 @@ const getRoomDetail = async (id: number): Promise<IResponseBase<IRoomTypeData> |
      const response: IResponseBase<IRoomTypeData> = await http.get(`/api/RoomType/GetById/${id}`)
      return response
   } catch (error: any) {
-    console.log("API lỗi", error.response?.data || error.message);
-    return undefined;
+    throw error.response.data;
   }
 }  
   

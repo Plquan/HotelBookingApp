@@ -1,16 +1,18 @@
 import axios from "axios";
 import env from "@/constants/envConstant";
-import accessToken from "@/utils/functions/accessToken";
-
+import accessToken from "../functions/accessToken";
 
 const http = axios.create({
   baseURL: env.API_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
   withCredentials: true,
 });
-http.interceptors.request.use((config) => {
-  // if (getAccessToken() !== undefined) {
-  //   config.headers.Authorization = "Bearer " + String(getAccessToken());
-  // }
+http.interceptors.request.use(async (config) => {
+  if (await accessToken.getAccessToken() !== undefined) {
+    config.headers.Authorization = "Bearer " + String(await accessToken.getAccessToken());
+  }
   return config;
 });
 http.interceptors.response.use(

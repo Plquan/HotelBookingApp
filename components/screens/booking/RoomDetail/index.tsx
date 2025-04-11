@@ -23,12 +23,17 @@ import bookingServices from '@/services/bookingServices';
 import { IRoomTypeData } from '@/interfaces/roomType/IRoomDTO';
 import env from '@/constants/envConstant';
 import { useLocalSearchParams } from 'expo-router';
-const IMAGE_URL = env.IMAGE_URL
+import GalleryModal from './components/RoomGalleryModal';
+import Toast from 'react-native-toast-message';
+import { IChooseRoom } from '@/interfaces/booking/IBookingType';
+
+const IMAGE_URL = env.IMAGE_URL;
 
 export default function RoomDetailScreen() {
   const router = useRouter();
   const [isFavorite, setIsFavorite] = useState(false);
   const [roomDetail, setRoomDetail] = useState<IRoomTypeData>();
+  const [showGallery, setShowGallery] = useState(false);
   
   // Date picker states
   const fromDateStore = useSelector((state: RootState) => state.bookingStore.fromDate);
@@ -38,8 +43,8 @@ export default function RoomDetailScreen() {
   const [showDatePickerModal, setShowDatePickerModal] = useState(false);
   const [showArrivalPicker, setShowArrivalPicker] = useState(false);
   const [showDeparturePicker, setShowDeparturePicker] = useState(false);
+  const [chooseRoom,setChooseRoom] = useState<IChooseRoom[]>([])
   const [personCount, setPersonCount] = useState('2');
-
 
   const { id } = useLocalSearchParams();
   const getRoomDetail = async (id: number) => {
@@ -101,12 +106,12 @@ export default function RoomDetailScreen() {
     return `${format(fromDate, 'd')} thg ${format(fromDate, 'M')} – ${format(toDate, 'd')} thg ${format(toDate, 'M')}`;
   };
   
+  // Open gallery modal instead of showing alert
   const showMoreImages = () => {
-    Alert.alert("Gallery", "This would open a full image gallery");
+    setShowGallery(true);
   };
 
   const proceedToBooking = () => {
-  
     Alert.alert("Booking", "Proceeding to book room for selected dates");
   };
 
@@ -126,8 +131,8 @@ export default function RoomDetailScreen() {
           <Text style={styles.headerDates}>{formatDateRange()}</Text>
         </View>
         <View style={styles.headerIcons}>
-          <TouchableOpacity style={styles.headerIconButton}>
-            <FontAwesome name="heart-o" size={22} color="white" />
+          <TouchableOpacity style={styles.headerIconButton} onPress={toggleFavorite}>
+            <FontAwesome name={isFavorite ? "heart" : "heart-o"} size={22} color="white" />
           </TouchableOpacity>
           <TouchableOpacity onPress={handleShare} style={styles.headerIconButton}>
             <Ionicons name="share-outline" size={24} color="white" />
@@ -140,8 +145,10 @@ export default function RoomDetailScreen() {
         {/* Image Section */}
         <View style={styles.imageContainer}>
           <Image 
-            source={{ uri: env.IMAGE_URL + roomDetail?.roomImages[0].url 
-           }}
+            source={{ uri: roomDetail?.roomImages && roomDetail.roomImages.length > 0 
+              ? IMAGE_URL + roomDetail.roomImages[0].url 
+              : 'https://via.placeholder.com/400x300'
+            }}
             style={styles.roomImage} 
             resizeMode="cover"
           />
@@ -186,15 +193,13 @@ export default function RoomDetailScreen() {
             </View>
             
             <View style={styles.featureItem}>
-            <MaterialIcons name="visibility" size={22} color="#b58e50" />
-            <Text style={styles.featureText}>{roomDetail?.view}</Text>
-          </View>
-
+              <MaterialIcons name="visibility" size={22} color="#b58e50" />
+              <Text style={styles.featureText}>{roomDetail?.view}</Text>
+            </View>
             
             <View style={styles.featureItem}>
               <MaterialIcons name="people" size={22} color="#b58e50" />
-              <Text style={styles.featureText}>{"1 phòng - " + (roomDetail?.capacity ?? "?") + " người"}
-              </Text>
+              <Text style={styles.featureText}>{"1 phòng - " + (roomDetail?.capacity ?? "?") + " người"}</Text>
             </View>
           </View>
           
@@ -211,9 +216,7 @@ export default function RoomDetailScreen() {
         </View>
       </ScrollView>
       
-      {/* Bottom Booking Button */}
-
-     {/* Bottom Booking Button with gray background wrapper */}
+      {/* Bottom Booking Button with gray background wrapper */}
       <View style={styles.bookingButtonWrapper}>
         <TouchableOpacity style={styles.bookingButton} onPress={proceedToBooking}>
           <Text style={styles.bookingButtonText}>Đặt phòng ngay</Text>
@@ -288,18 +291,26 @@ export default function RoomDetailScreen() {
           </View>
         </View>
       </Modal>
+
+      {/* Gallery Modal */}
+      {roomDetail?.roomImages && (
+        <GalleryModal 
+          visible={showGallery} 
+          images={roomDetail.roomImages}
+          onClose={() => setShowGallery(false)}
+          imageBaseUrl={IMAGE_URL}
+        />
+      )}
     </SafeAreaView>
   );
 }
 
+// Same styles as your original component
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: '#222',
   },
-  // Updated header styles to position buttons on the right
-
-
   header: {
     backgroundColor: '#333',
     padding: 15,
@@ -461,8 +472,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,
-    marginBottom:40,
-    marginTop:8
+    marginBottom: 40,
+    marginTop: 8
   },
   bookingButtonWrapper: {
     position: 'absolute',
@@ -474,7 +485,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderTopWidth: 1,
     borderTopColor: '#444',
-
   },
   bookingButtonText: {
     color: 'white',

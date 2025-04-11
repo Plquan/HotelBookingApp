@@ -152,7 +152,7 @@ export default function HomeScreen() {
             </View>
 
             <TouchableOpacity style={styles.button} onPress={handleCheckRoom}>
-              <Text style={styles.buttonText}>TÌM PHÒNG</Text>
+              <Text style={styles.buttonText}>Tìm phòng</Text>
             </TouchableOpacity>
           </View>
 
@@ -166,9 +166,14 @@ export default function HomeScreen() {
               contentContainerStyle={styles.lastMinuteScroll}
             >
               {roomTypeData.map((room) => (
-                <View key={room.id} style={styles.lastMinuteCard}>
+                  <TouchableOpacity
+                      activeOpacity={0.8}
+                      onPress={() => router.push(`/(booking)/roomDetail?id=${room.id}`)}
+                      key={room.id}
+                    >
+                 <View style={styles.lastMinuteCard}>
                   <Image source={{ uri: "https://currently-together-squid.ngrok-free.app/images/" + room.roomImages[0].url }} style={styles.lastMinuteImage} />
-                  
+             
                   <View style={styles.infoContainer}>
                     <Text style={styles.hotelName}>{room.name}</Text>
                     <Text numberOfLines={1} ellipsizeMode="tail" style={styles.distance}>{room.slug}</Text>
@@ -177,6 +182,9 @@ export default function HomeScreen() {
                     </View>
                   </View>
                 </View>
+
+                    </TouchableOpacity>
+              
               ))}
             </ScrollView>
           </View>

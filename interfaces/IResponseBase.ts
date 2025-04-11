@@ -3,8 +3,8 @@ interface IError {
     errorDetail?: string;
   }
   export interface IResponseBase<T> {
-    status: number;
-    success?: boolean;
+    statusCode: number;
+    isSuccess?: boolean;
     message?: string;
     data?: T;
     error?: IError | null;
