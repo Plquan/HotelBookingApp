@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
-  Image, // Import thêm Image
+  Image,
+  Keyboard, TouchableWithoutFeedback
 } from 'react-native';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -18,10 +19,12 @@ import { useDispatch } from "react-redux";
 import { authAction } from '@/stores/authStore/authReducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AppDispatch } from '@/stores';
+import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
 export default function LoginScreen() {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
 
   const router = useRouter();
@@ -41,6 +44,7 @@ export default function LoginScreen() {
       
     }
      try {
+      setIsLoading(true)
       const params: ILoginRequestData = {
         userName:userName,
         password:password
@@ -57,19 +61,25 @@ export default function LoginScreen() {
         router.navigate('(tabs)/setting')
        }
      } catch (error) {
-      
+      console.log('Lỗi đăng kí',error)
+     }
+     finally{
+      setIsLoading(false)
      }
   }
+
   return (
-    <SafeAreaView style={styles.safeArea}>
+   <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+       <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="light-content" />
+      <LoadingOverlayView visible={isLoading} text="Xin chờ trong giây lát" />
       <View style={styles.container}>
         {/* Header with X button and logo */}
         <View style={styles.header}>
           <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-            <FontAwesome name="times" size={24} color="#fff" />
+            <FontAwesome name="arrow-left" size={24} color="#fff" />
           </TouchableOpacity>
-          <Text style={styles.logoText}>Booking.com</Text>
+          <Text style={styles.logoText}>Đăng nhập</Text>
           <View style={styles.emptySpace} />
         </View>
 
@@ -135,12 +145,13 @@ export default function LoginScreen() {
           </View>
 
           {/* Register Link */}
-          <TouchableOpacity style={styles.registerButton}>
+          <TouchableOpacity style={styles.registerButton} onPress={() => {  router.replace('/(auth)/register');}}>
             <Text style={styles.registerButtonText}>Tạo tài khoản mới</Text>
           </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
+   </TouchableWithoutFeedback>
   );
 }
 

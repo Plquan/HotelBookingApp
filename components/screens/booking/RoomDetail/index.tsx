@@ -26,6 +26,7 @@ import { useLocalSearchParams } from 'expo-router';
 import GalleryModal from './components/RoomGalleryModal';
 import Toast from 'react-native-toast-message';
 import { IChooseRoom } from '@/interfaces/booking/IBookingType';
+import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
 
 const IMAGE_URL = env.IMAGE_URL;
 
@@ -45,14 +46,19 @@ export default function RoomDetailScreen() {
   const [showDeparturePicker, setShowDeparturePicker] = useState(false);
   const [chooseRoom,setChooseRoom] = useState<IChooseRoom[]>([])
   const [personCount, setPersonCount] = useState('2');
+  const [isLoading, setIsLoading] = useState(false);
 
   const { id } = useLocalSearchParams();
   const getRoomDetail = async (id: number) => {
      try {
+      setIsLoading(true)
       const response = await bookingServices.getRoomDetail(id)
       setRoomDetail(response?.data)
      } catch (error) {
       console.error("Lỗi khi lấy thông tin phòng:", error);
+     }
+     finally{
+      setIsLoading(false)
      }
   }
   
@@ -117,6 +123,7 @@ export default function RoomDetailScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+     <LoadingOverlayView visible={isLoading} text="Đang tải" />
       <StatusBar barStyle="light-content" backgroundColor="#222" />
       
       {/* Updated Header with action buttons on the right side */}

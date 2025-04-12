@@ -20,9 +20,10 @@ import { RootState } from '@/stores/index';
 import bookingServices from '@/services/bookingServices';
 import { IRoomTypeData } from '@/interfaces/roomType/IRoomDTO';
 import env from '@/constants/envConstant';
-import { styles } from './CheckRoom.style'; // Import styles
+import { styles } from './CheckRoom.style';
 import { IChooseRoom } from '@/interfaces/booking/IBookingType';
 import Toast from 'react-native-toast-message';
+import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
 
 export default function CheckRoomScreen() {
   const fromDateStore = useSelector((state: RootState) => state.bookingStore.fromDate);
@@ -35,11 +36,13 @@ export default function CheckRoomScreen() {
   const [availableRooms, setAvailableRooms] = useState<IRoomTypeData[]>([]);
   const [personCount, setPersonCount] = useState('2');
   const [chooseRoom,setChooseRoom] = useState<IChooseRoom[]>([])
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
 
   const checkAvailableRoom = async () => {
     try {
+      setIsLoading(true)
       const params = {
         fromDate: new Date(fromDate).toISOString().split('T')[0],
         toDate: new Date(toDate).toISOString().split('T')[0],
@@ -49,6 +52,9 @@ export default function CheckRoomScreen() {
       setAvailableRooms(res?.data || []);
     } catch (error) {
       console.error('Lỗi khi kiểm tra phòng:', error);
+    }
+    finally{
+      setIsLoading(false)
     }
   };
 
@@ -92,9 +98,8 @@ export default function CheckRoomScreen() {
       const currentNumber = existing ? existing.number : 0;
       const updatedNumber = currentNumber + change;
   
-      if (updatedNumber > max) return prev; // Không vượt quá số lượng phòng
+      if (updatedNumber > max) return prev; 
       if (updatedNumber < 1) {
-        // Nếu nhỏ hơn 1 thì xóa khỏi mảng
         return prev.filter(item => item.roomTypeId !== roomTypeId);
       }
   
@@ -114,9 +119,9 @@ export default function CheckRoomScreen() {
     const totalRooms = chooseRoom.reduce((sum, item) => sum + item.number, 0);
     if (Number(personCount) > totalRooms){
       Toast.show({
-        type: 'info', // 'success' | 'error' | 'info'
+        type: 'info',
         text1:  `Không đủ phòng cho ${Number(personCount)} người! `,
-        position: 'top', // hoặc 'bottom'
+        position: 'top', 
       });
     }
   }
@@ -144,7 +149,7 @@ export default function CheckRoomScreen() {
             </Text>
             <View style={styles.ratingContainer}>
               <View style={styles.ratingBox}>
-                <Text style={styles.ratingScore}>{item.price}</Text>
+                <Text style={styles.ratingScore}>{item.price.toLocaleString("vi-VN", { style: "currency", currency: "VND" })}</Text>
               </View>
             </View>
             <View style={styles.locationContainer}>
@@ -194,6 +199,7 @@ export default function CheckRoomScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+       <LoadingOverlayView visible={isLoading} text="Đang tải" />
       <StatusBar barStyle="light-content" backgroundColor="#333" />
       <TouchableOpacity style={styles.header} onPress={toggleDatePickerModal}>
         <View style={styles.headerContent}>

@@ -165,7 +165,7 @@ const GalleryModal = ({ visible, images, onClose, imageBaseUrl }: { visible: boo
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Ionicons name="arrow-back" size={24} color="white" />
+            <Ionicons name="close" size={24} color="white" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Hình ảnh</Text>
           <View style={{ width: 40 }} />

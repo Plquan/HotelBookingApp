@@ -4,7 +4,7 @@ import { Link, useRouter } from 'expo-router';
 import LoginScreen from '@/components/screens/Auth/Login';
 
 
-export default function login() {
+export default function LoginTab() {
   const router = useRouter();
 
   return (

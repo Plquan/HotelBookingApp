@@ -21,6 +21,7 @@ import { AppDispatch, RootState } from '@/stores/index';
 import { roomTypeAction } from '@/stores/roomTypeStore/roomTypeReducer';
 import { useRouter } from 'expo-router';
 import { bookingAction } from '@/stores/bookingStore/bookingReducer';
+import CustomButton from '@/components/ui/Button';
 
 export default function HomeScreen() {
   const [children, setChildren] = useState('2');
@@ -150,10 +151,11 @@ export default function HomeScreen() {
                 returnKeyType="done"
               />
             </View>
-
-            <TouchableOpacity style={styles.button} onPress={handleCheckRoom}>
-              <Text style={styles.buttonText}>Tìm phòng</Text>
-            </TouchableOpacity>
+            <CustomButton
+              title="Tìm phòng"
+              onPress={handleCheckRoom}
+              style={styles.button}
+            />
           </View>
 
           {/* LAST MINUTE SLIDER */}
