@@ -21,7 +21,7 @@ import CustomButton from '@/components/ui/Button';
 import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
 
 // Import styles từ file riêng
-import styles from '@/components/screens/Setting/SettingScreen.style'
+import styles from '@/components/screens/Setting/Setting.style'
 
 export default function SettingScreen() {
   const router = useRouter();

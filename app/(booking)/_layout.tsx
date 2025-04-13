@@ -18,6 +18,13 @@ export default function Layout() {
           headerShown: false,
         }}
       />
+         <Stack.Screen
+        name="guestInfo"
+       
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }

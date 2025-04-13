@@ -34,14 +34,22 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
       />
+       <Tabs.Screen
+        name="booked"
+        options={{
+          title: 'Đã đặt',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="suitcase.fill" color={color} />,
+        }}
+      />
 
       <Tabs.Screen
         name="setting"
         options={{
-          title: 'Settings',
+          title: 'Cài đặt',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="gearshape.fill" color={color} />,
         }}
       />
+       
     </Tabs>
   );
 }

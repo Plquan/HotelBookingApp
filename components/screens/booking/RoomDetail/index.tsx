@@ -9,14 +9,11 @@ import {
   StatusBar,
   Share,
   Alert,
-  Modal,
-  TextInput,
 } from 'react-native';
 import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { format } from "date-fns";
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/stores/index';
 import bookingServices from '@/services/bookingServices';
@@ -27,6 +24,7 @@ import GalleryModal from './components/RoomGalleryModal';
 import Toast from 'react-native-toast-message';
 import { IChooseRoom } from '@/interfaces/booking/IBookingType';
 import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
+import CustomDatePicker from '@/components/ui/BookingDatePicker';
 
 const IMAGE_URL = env.IMAGE_URL;
 
@@ -41,30 +39,27 @@ export default function RoomDetailScreen() {
   const toDateStore = useSelector((state: RootState) => state.bookingStore.toDate);
   const [fromDate, setFromDate] = useState(() => new Date(fromDateStore));
   const [toDate, setToDate] = useState(() => new Date(toDateStore));
-  const [showDatePickerModal, setShowDatePickerModal] = useState(false);
-  const [showArrivalPicker, setShowArrivalPicker] = useState(false);
-  const [showDeparturePicker, setShowDeparturePicker] = useState(false);
-  const [chooseRoom,setChooseRoom] = useState<IChooseRoom[]>([])
+  const [chooseRoom, setChooseRoom] = useState<IChooseRoom[]>([]);
   const [personCount, setPersonCount] = useState('2');
   const [isLoading, setIsLoading] = useState(false);
 
   const { id } = useLocalSearchParams();
+  
   const getRoomDetail = async (id: number) => {
-     try {
-      setIsLoading(true)
-      const response = await bookingServices.getRoomDetail(id)
-      setRoomDetail(response?.data)
-     } catch (error) {
+    try {
+      setIsLoading(true);
+      const response = await bookingServices.getRoomDetail(id);
+      setRoomDetail(response?.data);
+    } catch (error) {
       console.error("Lỗi khi lấy thông tin phòng:", error);
-     }
-     finally{
-      setIsLoading(false)
-     }
-  }
+    } finally {
+      setIsLoading(false);
+    }
+  };
   
   useEffect(() => {
-   getRoomDetail(Number(id))
-  },[])
+    getRoomDetail(Number(id));
+  }, []);
 
   const handleBack = () => {
     router.back();
@@ -84,33 +79,6 @@ export default function RoomDetailScreen() {
       console.error('Error sharing:', error);
     }
   };
-
-  // Date picker functions
-  const toggleDatePickerModal = () => {
-    setShowDatePickerModal(!showDatePickerModal);
-  };
-
-  const toggleArrivalPicker = () => {
-    setShowArrivalPicker(!showArrivalPicker);
-    setShowDeparturePicker(false);
-  };
-
-  const toggleDeparturePicker = () => {
-    setShowDeparturePicker(!showDeparturePicker);
-    setShowArrivalPicker(false);
-  };
-
-  const onChangeArrival = (event: any, selectedDate?: Date | undefined) => {
-    if (selectedDate) setFromDate(selectedDate);
-  };
-
-  const onChangeDeparture = (event: any, selectedDate?: Date | undefined) => {
-    if (selectedDate) setToDate(selectedDate);
-  };
-
-  const formatDateRange = () => {
-    return `${format(fromDate, 'd')} thg ${format(fromDate, 'M')} – ${format(toDate, 'd')} thg ${format(toDate, 'M')}`;
-  };
   
   // Open gallery modal instead of showing alert
   const showMoreImages = () => {
@@ -123,11 +91,11 @@ export default function RoomDetailScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-     <LoadingOverlayView visible={isLoading} text="Đang tải" />
+      <LoadingOverlayView visible={isLoading} text="Đang tải" />
       <StatusBar barStyle="light-content" backgroundColor="#222" />
       
       {/* Updated Header with action buttons on the right side */}
-      <TouchableOpacity style={styles.header} onPress={toggleDatePickerModal}>
+      <View style={styles.header}>
         <View style={styles.headerContent}>
           <View style={styles.headerLeft}>
             <TouchableOpacity onPress={handleBack}>
@@ -135,7 +103,19 @@ export default function RoomDetailScreen() {
             </TouchableOpacity>
             <Text style={styles.headerTitle}>{roomDetail?.name || "Chi tiết phòng"}</Text>
           </View>
-          <Text style={styles.headerDates}>{formatDateRange()}</Text>
+          
+          {/* Use CustomDatePicker component */}
+          <CustomDatePicker
+            fromDate={fromDate}
+            toDate={toDate}
+            onFromDateChange={setFromDate}
+            onToDateChange={setToDate}
+            personCount={personCount}
+            onPersonCountChange={setPersonCount}
+            onApply={proceedToBooking}
+            applyButtonText="ĐẶT PHÒNG"
+            dateTextStyle={styles.headerDates}
+          />
         </View>
         <View style={styles.headerIcons}>
           <TouchableOpacity style={styles.headerIconButton} onPress={toggleFavorite}>
@@ -145,7 +125,7 @@ export default function RoomDetailScreen() {
             <Ionicons name="share-outline" size={24} color="white" />
           </TouchableOpacity>
         </View>
-      </TouchableOpacity>
+      </View>
       
       {/* Scrollable content container that includes image and all information */}
       <ScrollView style={styles.mainScrollView}>
@@ -229,75 +209,6 @@ export default function RoomDetailScreen() {
           <Text style={styles.bookingButtonText}>Đặt phòng ngay</Text>
         </TouchableOpacity>
       </View>
-
-      {/* Date Picker Modal */}
-      <Modal
-        visible={showDatePickerModal}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={toggleDatePickerModal}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <TouchableOpacity onPress={toggleDatePickerModal}>
-                <Ionicons name="close" size={24} color="#333" />
-              </TouchableOpacity>
-              <Text style={styles.modalTitle}>Chọn ngày</Text>
-              <View style={{ width: 24 }} />
-            </View>
-
-            <View style={styles.dateSelectionContainer}>
-              <TouchableOpacity 
-                style={[styles.dateSelection, showArrivalPicker && styles.activeDateSelection]} 
-                onPress={toggleArrivalPicker}
-              >
-                <Text style={styles.dateSelectionLabel}>NGÀY ĐẾN</Text>
-                <Text style={styles.dateSelectionValue}>{format(fromDate, 'dd/MM/yyyy')}</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity 
-                style={[styles.dateSelection, showDeparturePicker && styles.activeDateSelection]} 
-                onPress={toggleDeparturePicker}
-              >
-                <Text style={styles.dateSelectionLabel}>NGÀY ĐI</Text>
-                <Text style={styles.dateSelectionValue}>{format(toDate, 'dd/MM/yyyy')}</Text>
-              </TouchableOpacity>
-            </View>
-
-            {(showArrivalPicker || showDeparturePicker) && (
-              <DateTimePicker
-                value={showArrivalPicker ? fromDate : toDate}
-                locale="vi-VN"
-                mode="date"
-                display="inline"
-                onChange={showArrivalPicker ? onChangeArrival : onChangeDeparture}
-                themeVariant="light"
-                style={styles.datePicker}
-                minimumDate={new Date()}
-              />
-            )}
-
-            <View style={styles.personSelection}>
-              <Text style={styles.personSelectionLabel}>SỐ NGƯỜI</Text>
-              <TextInput
-                style={styles.personInput}
-                value={personCount}
-                onChangeText={setPersonCount}
-                keyboardType="numeric"
-                returnKeyType="done"
-              />
-            </View>
-
-            <TouchableOpacity 
-              style={styles.applyButton} 
-              onPress={proceedToBooking}
-            >
-              <Text style={styles.applyButtonText}>ĐẶT PHÒNG</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
 
       {/* Gallery Modal */}
       {roomDetail?.roomImages && (
