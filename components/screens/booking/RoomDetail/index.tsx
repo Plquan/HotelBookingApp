@@ -35,12 +35,11 @@ export default function RoomDetailScreen() {
   const [showGallery, setShowGallery] = useState(false);
   
   // Date picker states
-  const fromDateStore = useSelector((state: RootState) => state.bookingStore.fromDate);
-  const toDateStore = useSelector((state: RootState) => state.bookingStore.toDate);
-  const [fromDate, setFromDate] = useState(() => new Date(fromDateStore));
-  const [toDate, setToDate] = useState(() => new Date(toDateStore));
+  const booking = useSelector((state: RootState) => state.bookingStore.bookingData);
+  const [fromDate, setFromDate] = useState(() => new Date(booking.fromDate));
+  const [toDate, setToDate] = useState(() => new Date(booking.toDate));
   const [chooseRoom, setChooseRoom] = useState<IChooseRoom[]>([]);
-  const [personCount, setPersonCount] = useState('2');
+  const [personCount, setPersonCount] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
   const { id } = useLocalSearchParams();

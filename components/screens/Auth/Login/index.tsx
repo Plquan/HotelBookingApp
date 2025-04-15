@@ -10,7 +10,7 @@ import {
   Image,
   Keyboard, TouchableWithoutFeedback
 } from 'react-native';
-import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import authSevices from '@/services/authServices';
 import { ILoginRequestData, ILoginResponseData } from "@/interfaces/auth/LoginType";
@@ -20,6 +20,8 @@ import { authAction } from '@/stores/authStore/authReducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AppDispatch } from '@/stores';
 import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
+import BackButton from '@/components/ui/ButtonBack';
+
 export default function LoginScreen() {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
@@ -28,12 +30,8 @@ export default function LoginScreen() {
   const dispatch = useDispatch<AppDispatch>();
 
   const router = useRouter();
-  const handleBack = () => {
-    router.back();
-  };
-
   const handleLogin = async () => {
-
+       Keyboard.dismiss()
     if(!userName || !password){
      Toast.show({
         type: 'error',
@@ -58,7 +56,14 @@ export default function LoginScreen() {
         });
         await AsyncStorage.setItem("accessToken", res.data?.accessToken || '');
         dispatch(authAction.getCurrentUser())
-        router.navigate('(tabs)/setting')
+        router.back()
+       }
+       else{
+        Toast.show({
+          type: 'error',
+          text1: `${res.message}`,
+          position: 'top'
+        });
        }
      } catch (error) {
       console.log('Lỗi đăng kí',error)
@@ -74,18 +79,14 @@ export default function LoginScreen() {
       <StatusBar barStyle="light-content" />
       <LoadingOverlayView visible={isLoading} text="Xin chờ trong giây lát" />
       <View style={styles.container}>
-        {/* Header with X button and logo */}
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-            <FontAwesome name="arrow-left" size={24} color="#fff" />
-          </TouchableOpacity>
+          <BackButton/>
           <Text style={styles.logoText}>Đăng nhập</Text>
           <View style={styles.emptySpace} />
         </View>
 
-        {/* Main content */}
+       
         <View style={styles.content}>
-          {/* Thay thế title bằng hình ảnh */}
           <Image
             style={styles.titleImage}
             source={require('@/assets/images/sky-logo-header.png')}
@@ -172,11 +173,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  backButton: {
-    padding: 4,
-  },
   logoText: {
-    fontSize: 22,
+    fontSize: 18,
     color: '#fff',
     fontWeight: 'bold',
     textAlign: 'center',

@@ -1,4 +1,4 @@
-// RegisterScreen.tsx - phần cập nhật với CustomButton
+// RegisterScreen.tsx - phần cập nhật với CustomButton và BackButton
 import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
@@ -8,21 +8,20 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
-  Image, 
+  Image,
   Keyboard,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import authSevices from '@/services/authServices';
 import Toast from 'react-native-toast-message';
-import { useDispatch } from "react-redux";
-import { AppDispatch } from '@/stores';
 import { IRegisterRequestData, IConfirmEmailRequestData } from '@/interfaces/auth/Register';
 import isValidEmail from '@/utils/functions/validateEmail';
 import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
 import VerificationModal from './components/VerificationModal';
 import CustomButton from '@/components/ui/Button';
+import BackButton from '@/components/ui/ButtonBack';
 
 export default function RegisterScreen() {
   const [userName, setUserName] = useState('');
@@ -30,21 +29,16 @@ export default function RegisterScreen() {
   const [password, setPassword] = useState('');
   const [confirmPassWord, setConfirmPassword] = useState('');
   const [phone, setPhone] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  // State cho modal xác thực
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
-  
-  // State cho việc gửi lại mã
   const [countdown, setCountdown] = useState(0);
   const [isResendDisabled, setIsResendDisabled] = useState(false);
-  // State mới
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isVerifying, setIsVerifying] = useState(false);
   const [isResending, setIsResending] = useState(false);
 
-  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
   useEffect(() => {
@@ -52,16 +46,11 @@ export default function RegisterScreen() {
       const timer = setTimeout(() => {
         setCountdown(countdown - 1);
       }, 1000);
-      
       return () => clearTimeout(timer);
     } else if (countdown === 0 && isResendDisabled) {
       setIsResendDisabled(false);
     }
   }, [countdown, isResendDisabled]);
-
-  const handleBack = () => {
-    router.back();
-  };
 
   const handleRegister = async () => {
     if(!userName || !email || !password || !confirmPassWord || !phone) {
@@ -92,7 +81,7 @@ export default function RegisterScreen() {
     }
     try {
       setIsLoading(true);
-      const params:IRegisterRequestData = {
+      const params: IRegisterRequestData = {
         userName: userName,
         email: email,
         password: password,
@@ -105,8 +94,7 @@ export default function RegisterScreen() {
         setCountdown(30);
         setIsResendDisabled(true);
         setErrorMessage(null);
-      }
-      else{
+      } else {
         Toast.show({
           type: 'error',
           text1: 'Đăng ký',
@@ -127,7 +115,6 @@ export default function RegisterScreen() {
       setErrorMessage('Vui lòng nhập đủ 4 chữ số');
       return;
     }
-    
     try {
       setIsVerifying(true);
       setErrorMessage(null);
@@ -198,9 +185,7 @@ export default function RegisterScreen() {
           <LoadingOverlayView visible={isLoading} text="Xin chờ trong giây lát" />
           
           <View style={styles.header}>
-            <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-              <FontAwesome name="arrow-left" size={24} color="#fff" />
-            </TouchableOpacity>
+            <BackButton /> 
             <Text style={styles.logoText}>Đăng kí tài khoản</Text>
             <View style={styles.emptySpace} />
           </View>
@@ -333,11 +318,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  backButton: {
-    padding: 4,
-  },
   logoText: {
-    fontSize: 22,
+    fontSize: 18,
     color: '#fff',
     fontWeight: 'bold',
     textAlign: 'center',

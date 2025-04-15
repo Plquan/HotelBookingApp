@@ -4,7 +4,6 @@ import {
   Text,
   View,
   TouchableOpacity,
-  TextInput,
   Modal,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -16,8 +15,8 @@ interface DatePickerProps {
   toDate: Date;
   onFromDateChange: (date: Date) => void;
   onToDateChange: (date: Date) => void;
-  personCount: string;
-  onPersonCountChange: (count: string) => void;
+  personCount: number;
+  onPersonCountChange: (count: number) => void;
   modalTitle?: string;
   applyButtonText?: string;
   onApply?: () => void;
@@ -79,6 +78,18 @@ const CustomDatePicker: React.FC<DatePickerProps> = ({
     toggleDatePickerModal();
   };
 
+  const decrementPersonCount = () => {
+    const currentCount = personCount;
+    if (currentCount > 1) {
+      onPersonCountChange(currentCount - 1);
+    }
+  };
+
+  const incrementPersonCount = () => {
+    const currentCount = personCount;
+    onPersonCountChange(currentCount + 1);
+  };
+
   return (
     <View>
       <TouchableOpacity style={headerStyle} onPress={toggleDatePickerModal}>
@@ -134,14 +145,26 @@ const CustomDatePicker: React.FC<DatePickerProps> = ({
 
             {showPersonSelection && (
               <View style={styles.personSelection}>
-                <Text style={styles.personSelectionLabel}>SỐ NGƯỜI</Text>
-                <TextInput
-                  style={styles.personInput}
-                  value={personCount}
-                  onChangeText={onPersonCountChange}
-                  keyboardType="numeric"
-                  returnKeyType="done"
-                />
+                <View style={styles.personSelectionRow}>
+                  <Text style={styles.personSelectionLabel}>KHÁCH</Text>
+                  <View style={styles.personCountContainer}>
+                    <TouchableOpacity 
+                      style={styles.countButton} 
+                      onPress={decrementPersonCount}
+                    >
+                      <Text style={styles.countButtonText}>－</Text>
+                    </TouchableOpacity>
+                    <View style={styles.countDisplay}>
+                      <Text style={styles.personCountText}>{personCount}</Text>
+                    </View>
+                    <TouchableOpacity 
+                      style={styles.countButton} 
+                      onPress={incrementPersonCount}
+                    >
+                      <Text style={styles.countButtonText}>＋</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
               </View>
             )}
 
@@ -210,6 +233,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
     borderRadius: 10,
     marginBottom: 20,
+    paddingLeft:20,
+    paddingRight:20,
+    transform: [{ translateX:20 }]
   },
   personSelection: {
     padding: 15,
@@ -217,23 +243,49 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 20,
   },
+  personSelectionRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   personSelectionLabel: {
     color: '#b58e50',
     fontSize: 12,
     fontWeight: 'bold',
-    marginBottom: 5,
   },
-  personInput: {
-    fontSize: 16,
-    color: '#333',
-    textAlign: 'center',
+  personCountContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  countButton: {
+    width: 35,
+    height: 35,
+    backgroundColor: '#b58e50',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+  },
+  countButtonText: {
+    color: 'white',
+    fontSize: 18,
     fontWeight: 'bold',
+  },
+  countDisplay: {
+    width: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  personCountText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
   },
   applyButton: {
     backgroundColor: '#b58e50',
     borderRadius: 10,
     padding: 15,
     alignItems: 'center',
+    marginBottom:10
   },
   applyButtonText: {
     color: 'white',

@@ -11,6 +11,7 @@ const login = async (params: ILoginRequestData): Promise<IResponseBase<ILoginRes
         throw error.response.data;
     }
 }
+
 const logout = async (): Promise<IResponseBase<any>> => {
     try {
       const response: IResponseBase<any> = await http.post("/api/Auth/Logout");
@@ -19,6 +20,7 @@ const logout = async (): Promise<IResponseBase<any>> => {
         throw error.response.data;
     }
   };
+
 const register = async (params: IRegisterRequestData): Promise<IResponseBase<any>> => {
     try {
         const response: IResponseBase<any> = await http.post("/api/Auth/Register",params);
@@ -30,7 +32,6 @@ const register = async (params: IRegisterRequestData): Promise<IResponseBase<any
 
 const confirmEmail = async (params: IConfirmEmailRequestData): Promise<IResponseBase<any>> => {
     try {
-        console.log("hello",params)
         const response: IResponseBase<any> = await http.post("/api/Auth/ConfirmEmailAsync",params);
         return response
     } catch (error:any) {

@@ -21,20 +21,26 @@ import Toast from 'react-native-toast-message';
 import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
 import CustomDatePicker from '@/components/ui/BookingDatePicker';
 import CustomButton from '@/components/ui/Button';
+import { bookingAction } from '@/stores/bookingStore/bookingReducer';
 
 export default function CheckRoomScreen() {
-  const fromDateStore = useSelector((state: RootState) => state.bookingStore.fromDate);
-  const toDateStore = useSelector((state: RootState) => state.bookingStore.toDate);
-  const [fromDate, setFromDate] = useState(() => new Date(fromDateStore));
-  const [toDate, setToDate] = useState(() => new Date(toDateStore));
+  const bookingData = useSelector((state: RootState) => state.bookingStore.bookingData);
+
+  const [fromDate, setFromDate] = useState(() => new Date(bookingData.fromDate));
+  const [toDate, setToDate] = useState(() => new Date(bookingData.toDate));
   const [availableRooms, setAvailableRooms] = useState<IRoomTypeData[]>([]);
-  const [personCount, setPersonCount] = useState('2');
+  const [personCount, setPersonCount] = useState(bookingData.totalPerson || 1);
   const [chooseRoom, setChooseRoom] = useState<IChooseRoom[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-
+  const dispatch = useDispatch();
   const router = useRouter();
 
   const checkAvailableRoom = async () => {
+      dispatch(bookingAction.setBookingData({
+          fromDate:fromDate.toISOString(),
+          toDate:toDate.toISOString(),
+          totalPerson:personCount,
+        }))
     try {
       setIsLoading(true);
       const params = {
@@ -52,20 +58,26 @@ export default function CheckRoomScreen() {
   };
 
   useEffect(() => {
+    setFromDate(new Date(bookingData.fromDate));
+    setToDate(new Date(bookingData.toDate));
+    setPersonCount(bookingData.totalPerson || 1);
+  }, [bookingData]);
+  
+  useEffect(() => {
     checkAvailableRoom();
-  }, [fromDate, toDate]);
+  }, []);
 
   const handleBack = () => {
     router.back();
   };
 
-  const handleQuantityChange = (roomTypeId: number, change: number, max: number) => {
+  const handleQuantityChange = (roomTypeId: number, change: number, price: number, max: number) => {
     setChooseRoom(prev => {
       const existing = prev.find(item => item.roomTypeId === roomTypeId);
       const currentNumber = existing ? existing.number : 0;
       const updatedNumber = currentNumber + change;
   
-      if (updatedNumber > max) return prev; 
+      if (updatedNumber > max) return prev;
       if (updatedNumber < 1) {
         return prev.filter(item => item.roomTypeId !== roomTypeId);
       }
@@ -77,10 +89,11 @@ export default function CheckRoomScreen() {
             : item
         );
       } else {
-        return [...prev, { roomTypeId, number: updatedNumber }];
+        return [...prev, { roomTypeId, number: updatedNumber, price }];
       }
     });
   };
+  
   
   const handleBooking = () => {
     const totalRooms = chooseRoom.reduce((sum, item) => sum + item.number, 0);
@@ -92,6 +105,9 @@ export default function CheckRoomScreen() {
       });
       return;
     }
+    dispatch(bookingAction.setBookingData({
+          chooseRooms:chooseRoom
+    }))
     router.push('/(booking)/guestInfo');
   };
 
@@ -138,7 +154,7 @@ export default function CheckRoomScreen() {
               <View style={styles.quantityControl}>
                 <TouchableOpacity
                   style={styles.quantityButton}
-                  onPress={() => handleQuantityChange(item.id, -1, item.capacity)}
+                  onPress={() => handleQuantityChange(item.id, -1,item.price, item.capacity)}
                 >
                   <Text style={styles.quantityButtonText}>-</Text>
                 </TouchableOpacity>
@@ -149,7 +165,7 @@ export default function CheckRoomScreen() {
 
                 <TouchableOpacity
                   style={styles.quantityButton}
-                  onPress={() => handleQuantityChange(item.id, 1, item.capacity)}
+                  onPress={() => handleQuantityChange(item.id, 1,item.price, item.capacity)}
                 >
                   <Text style={styles.quantityButtonText}>+</Text>
                 </TouchableOpacity>

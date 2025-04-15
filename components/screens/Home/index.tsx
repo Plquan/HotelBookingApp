@@ -8,8 +8,6 @@ import {
   TouchableOpacity,
   Image,
   ImageBackground,
-  KeyboardAvoidingView,
-  Platform,
   ScrollView,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
@@ -24,23 +22,31 @@ import { bookingAction } from '@/stores/bookingStore/bookingReducer';
 import CustomButton from '@/components/ui/Button';
 
 export default function HomeScreen() {
-  const [children, setChildren] = useState('2');
-  const [fromDate, setFromDate] = useState(new Date());
-  const [toDate, setToDate] = useState(new Date());
+  const booking = useSelector((state: RootState) => state.bookingStore.bookingData);
+
+  const [personCount, setPersonCount] = useState(booking.totalPerson || 1);
+  const [fromDate, setFromDate] = useState(new Date(booking.fromDate));
+  const [toDate, setToDate] = useState(new Date(booking.toDate));
   const [showArrivalPicker, setShowArrivalPicker] = useState(false);
   const [showDeparturePicker, setShowDeparturePicker] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
 
   const router = useRouter();
     
-        const handleCheckRoom = () => {
-          dispatch(bookingAction.setFromDate(new Date(fromDate).toISOString()));
-          dispatch(bookingAction.setToDate(new Date(toDate).toISOString()));
-
-            router.navigate("/(booking)/findRoom");
-        };
-
-
+  const handleCheckRoom = () => {
+    dispatch(bookingAction.setBookingData({
+      fromDate:fromDate.toISOString(),
+      toDate: toDate.toISOString(),
+      totalPerson:personCount
+    }))
+    router.navigate("/(booking)/findRoom");
+  };
+  useEffect(() => {
+    setFromDate(new Date(booking.fromDate));
+    setToDate(new Date(booking.toDate));
+    setPersonCount(booking.totalPerson || 1);
+  }, [booking]);
+  
   useEffect(() => {
     dispatch(roomTypeAction.getRoomTypeData());
   }, [dispatch]);
@@ -63,6 +69,18 @@ export default function HomeScreen() {
     if (selectedDate) {
       setToDate(selectedDate);
     }
+  };
+
+  const decrementpersonCount = () => {
+    const currentCount = personCount;
+    if (currentCount > 1) {
+      setPersonCount(currentCount - 1);
+    }
+  };
+
+  const incrementpersonCount = () => {
+    const currentCount = personCount;
+    setPersonCount(currentCount + 1);
   };
   
   return (
@@ -142,15 +160,28 @@ export default function HomeScreen() {
             </View>
 
             <View style={styles.countBox}>
-              <Text style={styles.label}>KHÁCH</Text>
-              <TextInput
-                style={styles.countInput}
-                value={children}
-                onChangeText={setChildren}
-                keyboardType="numeric"
-                returnKeyType="done"
-              />
+              <View style={styles.countBoxRow}>
+                <Text style={styles.label}>KHÁCH</Text>
+                <View style={styles.countControls}>
+                  <TouchableOpacity 
+                    style={styles.countButton} 
+                    onPress={decrementpersonCount}
+                  >
+                    <Text style={styles.countButtonText}>－</Text>
+                  </TouchableOpacity>
+                  <View style={styles.countDisplay}>
+                    <Text style={styles.countText}>{personCount}</Text>
+                  </View>
+                  <TouchableOpacity 
+                    style={styles.countButton} 
+                    onPress={incrementpersonCount}
+                  >
+                    <Text style={styles.countButtonText}>＋</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
             </View>
+            
             <CustomButton
               title="Tìm phòng"
               onPress={handleCheckRoom}
@@ -257,11 +288,37 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 5,
   },
-  countInput: {
-    fontSize: 20,
+  countBoxRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  countControls: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  countButton: {
+    width: 35,
+    height: 35,
+    backgroundColor: '#b58e50',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+  },
+  countButtonText: {
+    color: 'white',
+    fontSize: 18,
     fontWeight: 'bold',
-    color: '#888',
-    textAlign: 'center',
+  },
+  countDisplay: {
+    width: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  countText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
   },
   button: {
     backgroundColor: '#b58e50',
