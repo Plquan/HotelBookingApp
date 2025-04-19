@@ -39,7 +39,6 @@ export default function LoginScreen() {
         text2: 'Vui lòng điền đầy đủ thông tin để đăng nhập',
         position: 'top'
       });
-      
     }
      try {
       setIsLoading(true)

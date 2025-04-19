@@ -22,13 +22,15 @@ import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
 import CustomDatePicker from '@/components/ui/BookingDatePicker';
 import CustomButton from '@/components/ui/Button';
 import { bookingAction } from '@/stores/bookingStore/bookingReducer';
-
+import { ICheckRoomData } from "@/interfaces/booking/IBookingType";
+import { ISelectedRoom } from '@/interfaces/booking/IBookingType';
+import { differenceInDays } from 'date-fns';
 export default function CheckRoomScreen() {
   const bookingData = useSelector((state: RootState) => state.bookingStore.bookingData);
 
   const [fromDate, setFromDate] = useState(() => new Date(bookingData.fromDate));
   const [toDate, setToDate] = useState(() => new Date(bookingData.toDate));
-  const [availableRooms, setAvailableRooms] = useState<IRoomTypeData[]>([]);
+  const [availableRooms, setAvailableRooms] = useState<ICheckRoomData[]>([]);
   const [personCount, setPersonCount] = useState(bookingData.totalPerson || 1);
   const [chooseRoom, setChooseRoom] = useState<IChooseRoom[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -105,13 +107,32 @@ export default function CheckRoomScreen() {
       });
       return;
     }
+    const nights = differenceInDays(
+      new Date(toDate), 
+      new Date(fromDate)
+    );
+    
+    const selectedRooms: ISelectedRoom[] = chooseRoom.map(room => {
+      const roomDetails = availableRooms.find(ar => ar.id === room.roomTypeId);
+      
+      return {
+        id: room.roomTypeId,
+        name: roomDetails?.name || '',
+        count: room.number,
+        originalPrice: room.price,
+        totalPrice: (room.price * room.number) * (nights <= 0 ? 1 : nights),
+        image: roomDetails?.roomImages[0]?.url || ''
+      };
+    });
+   console.log(selectedRooms)
+    dispatch(bookingAction.setSelectedRoom(selectedRooms))
     dispatch(bookingAction.setBookingData({
           chooseRooms:chooseRoom
     }))
     router.push('/(booking)/guestInfo');
   };
 
-  const renderHotelItem = ({ item }: { item: IRoomTypeData }) => (
+  const renderHotelItem = ({ item }: { item: ICheckRoomData }) => (
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={() => router.push(`/(booking)/roomDetail?id=${item.id}`)}
@@ -154,7 +175,7 @@ export default function CheckRoomScreen() {
               <View style={styles.quantityControl}>
                 <TouchableOpacity
                   style={styles.quantityButton}
-                  onPress={() => handleQuantityChange(item.id, -1,item.price, item.capacity)}
+                  onPress={() => handleQuantityChange(item.id, -1,item.price, item.availableRooms)}
                 >
                   <Text style={styles.quantityButtonText}>-</Text>
                 </TouchableOpacity>
@@ -165,7 +186,7 @@ export default function CheckRoomScreen() {
 
                 <TouchableOpacity
                   style={styles.quantityButton}
-                  onPress={() => handleQuantityChange(item.id, 1,item.price, item.capacity)}
+                  onPress={() => handleQuantityChange(item.id, 1,item.price, item.availableRooms)}
                 >
                   <Text style={styles.quantityButtonText}>+</Text>
                 </TouchableOpacity>
@@ -208,7 +229,7 @@ export default function CheckRoomScreen() {
       
       <Text style={styles.totalCount}>1 chỗ nghỉ</Text>
       <FlatList
-        data={availableRooms}
+        data={availableRooms.filter(room => room.availableRooms > 0)}
         renderItem={renderHotelItem}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.listContainer}

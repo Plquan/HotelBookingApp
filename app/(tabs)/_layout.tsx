@@ -13,27 +13,49 @@ export default function TabLayout() {
 
   return (
     <Tabs
-      screenOptions={{
-        
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}
+    screenOptions={{
+      tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+      headerShown: false,
+      tabBarButton: HapticTab,
+      tabBarBackground: TabBarBackground,
+      tabBarStyle: Platform.select({
+        ios: {
+          position: 'absolute',
+          backgroundColor: '#111', 
+          height: 85,            
+          borderTopWidth: 1,       
+          borderTopColor: '#555',  
+          shadowOffset: { width: 0, height: -5 }, 
+          shadowOpacity: 0.1,       
+          shadowRadius: 5,          
+        },
+        default: {
+          backgroundColor: '#111',
+          height: 85,
+        },
+      }),
+    }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: 'Tìm kiếm',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="magnifyingglass" color={color} />,
         }}
       />
+     <Tabs.Screen
+          name="saved"
+          options={{
+            title: 'Đã lưu',
+            tabBarIcon: ({ color, focused }) => (
+              <IconSymbol
+                size={28}
+                name={focused ? 'heart.fill' : 'heart'}
+                color={color}
+              />
+            ),
+          }}
+        />
        <Tabs.Screen
         name="booked"
         options={{

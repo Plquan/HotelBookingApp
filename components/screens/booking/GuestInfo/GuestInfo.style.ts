@@ -3,11 +3,12 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#222',
+    backgroundColor: '#333',
   },
   content: {
     flex: 1,
     padding: 16,
+    backgroundColor:'#222'
   },
   headerContainer: {
     flexDirection: 'row',
@@ -102,12 +103,6 @@ export const styles = StyleSheet.create({
   priceHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  originalPrice: {
-    fontSize: 16,
-    color: '#999',
-    textDecorationLine: 'line-through',
-    marginRight: 8,
   },
   discountedPrice: {
     fontSize: 18,

@@ -1,5 +1,4 @@
-// SettingScreen.styles.ts
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform, StatusBar } from 'react-native';
 
 export default StyleSheet.create({
   safeArea: {
@@ -48,10 +47,28 @@ export default StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  // Fixed header styles
+  fixedHeader: {
+    backgroundColor: '#333',
+    zIndex: 999,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+  },
   // Logged in styles
   loggedInContainer: {
     flexGrow: 1,
     backgroundColor: '#333',
+    paddingBottom: 30,
+  },
+  // Scrollable content styles
+  scrollContent: {
+    flex: 1,
+    backgroundColor: '#222',
+  },
+  scrollContentContainer: {
     paddingBottom: 30,
   },
   userHeader: {
@@ -116,7 +133,7 @@ export default StyleSheet.create({
   settingRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#444',
+    backgroundColor: '#333',
     paddingHorizontal: 16,
     paddingVertical: 14,
     borderBottomWidth: 0.5,

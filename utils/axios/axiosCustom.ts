@@ -10,8 +10,9 @@ const http = axios.create({
   withCredentials: true,
 });
 http.interceptors.request.use(async (config) => {
-  if (await accessToken.getAccessToken() !== undefined) {
-    config.headers.Authorization = "Bearer " + String(await accessToken.getAccessToken());
+  const token = await accessToken.getAccessToken()
+  if (token !== undefined) {
+    config.headers.Authorization = "Bearer " + token;
   }
   return config;
 });

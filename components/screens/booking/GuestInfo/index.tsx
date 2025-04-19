@@ -25,7 +25,8 @@ const GuestInfoScreen = () => {
   const currentUser = useSelector(
     (state: RootState) => state.authStore.currentUser
   );
-   const booking = useSelector((state: RootState) => state.bookingStore.bookingData);
+
+  const selectedRooms = useSelector((state: RootState) => state.bookingStore.selectedRoom);
   const [userName, setUserName] = useState<string>();
   const [email, setEmail] = useState<string>();
   const [phoneNumber, setPhoneNumber] = useState<string>();
@@ -38,6 +39,10 @@ const GuestInfoScreen = () => {
     setEmail(currentUser?.email)
     setPhoneNumber(currentUser?.phoneNumber)
   },[currentUser])
+
+  const calculateTotalPrice = () => {
+    return selectedRooms.reduce((total, room) => total + room.totalPrice, 0);
+  };
 
   const handleSubmit = () => {
     if (!userName || !email || !phoneNumber) {
@@ -63,11 +68,6 @@ const GuestInfoScreen = () => {
         phone:phoneNumber,
         note:note,
      }))
-    Toast.show({
-      type: 'success',
-      text1: 'Đặt phòng thành công!',
-      position: 'top',
-    });
     router.push('/(booking)/payment')
   };
 
@@ -204,8 +204,11 @@ const GuestInfoScreen = () => {
         <View style={styles.bookingButtonWrapper}>
           <View style={styles.priceSection}>
             <View style={styles.priceHeader}>
-              <Text style={styles.originalPrice}>US$70</Text>
-              <Text style={styles.discountedPrice}>US$17</Text>
+              <Text style={styles.discountedPrice}>Tổng tiền: {' '}
+                {calculateTotalPrice().toLocaleString('vi-VN', { 
+                style: 'currency', 
+                currency: 'VND' 
+              })}</Text>
             </View>
             <Text style={styles.taxInfo}>Đã bao gồm thuế và phí</Text>
           </View>

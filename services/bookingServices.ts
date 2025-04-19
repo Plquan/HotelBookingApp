@@ -2,11 +2,11 @@ import http from "@/utils/axios/axiosCustom";
 import { IBookingRequestData, ICheckDate } from "@/interfaces/booking/IBookingType";
 import { IRoomTypeData } from "@/interfaces/roomType/IRoomDTO";
 import { IResponseBase } from "@/interfaces/IResponseBase";
-import { IPaymentData } from "@/interfaces/booking/IBookingType";
+import { ICheckRoomData } from "@/interfaces/booking/IBookingType";
 
-const checkRoom = async (params: ICheckDate): Promise<IResponseBase<IRoomTypeData[]> | undefined> => {
+const checkRoom = async (params: ICheckDate): Promise<IResponseBase<ICheckRoomData[]> | undefined> => {
     try {
-      const response : IResponseBase<IRoomTypeData[]> = await http.post("/api/Booking/CheckRoom",params)
+      const response : IResponseBase<ICheckRoomData[]> = await http.post("/api/Booking/CheckRoom",params)
       return response;
     } catch (error: any) {
       throw error.response.data;

@@ -18,17 +18,27 @@ import { useDispatch, useSelector } from 'react-redux';
 import { bookingAction } from '@/stores/bookingStore/bookingReducer';
 import { RootState, AppDispatch } from '@/stores';
 import bookingServices from '@/services/bookingServices';
-import formatDateOnly from '@/utils/functions/formatDate';
+import {formatDateOnly} from '@/utils/functions/formatDate';
 import { WebView } from 'react-native-webview';
+import PaymentInfoModal from './components/PaymentInfoModal';
+import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
 
 export default function PaymentScreen() {
   const router = useRouter();
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('COD');
   const [isWebViewVisible, setWebViewVisible] = useState(false);
   const [paymentUrl, setPaymentUrl] = useState('');
+  const [isPaymentInfoModalVisible, setIsPaymentInfoModalVisible] = useState(false);
+  const [bookingCode, setBookingCode] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const bookingData = useSelector((state: RootState) => state.bookingStore.bookingData);
-  
+  const selectedRooms = useSelector((state: RootState) => state.bookingStore.selectedRoom);
+
+  const calculateTotalPrice = () => {
+    return selectedRooms.reduce((total, room) => total + room.totalPrice, 0);
+  };
+
   const handleBack = () => {
     if (isWebViewVisible) {
       setWebViewVisible(false);
@@ -45,8 +55,8 @@ export default function PaymentScreen() {
   }, [selectedPaymentMethod]);
 
   const handleBookNow = async () => {
-    console.log(bookingData);
     try {
+      setIsLoading(true)
       const params = {
         ...bookingData,
         fromDate: formatDateOnly(new Date(bookingData.fromDate)),
@@ -58,29 +68,25 @@ export default function PaymentScreen() {
           setPaymentUrl(res.data);
           setWebViewVisible(true);
         } else {
-          // Xử lý khi thanh toán COD thành công
-          // Có thể chuyển hướng đến trang xác nhận đặt phòng
-          router.push('/booking-confirmation');
+          setBookingCode(res.data.code);
+          setIsPaymentInfoModalVisible(true);
         }
       }
-      console.log(res);
     } catch (error) {
       console.log(error);
     }
+    finally{
+      setIsLoading(false)
+    }
   };
 
-  // Xử lý khi thanh toán thành công hoặc thất bại
   const handleWebViewNavigation = (navState:any) => {
-    // Giả sử URL chuyển hướng khi thanh toán thành công chứa 'success'
     if (navState.url.includes('success')) {
       setWebViewVisible(false);
-      // Chuyển hướng đến trang xác nhận đặt phòng
       router.push('/booking-confirmation');
     }
-    // Giả sử URL chuyển hướng khi thanh toán thất bại chứa 'cancel' hoặc 'failure'
     else if (navState.url.includes('cancel') || navState.url.includes('failure')) {
       setWebViewVisible(false);
-      // Bạn có thể thêm xử lý khi thanh toán thất bại
       alert('Thanh toán không thành công. Vui lòng thử lại.');
     }
   };
@@ -92,7 +98,7 @@ export default function PaymentScreen() {
           <TouchableOpacity onPress={handleBack} style={styles.backButton}>
             <Ionicons name="chevron-back" size={24} color="white" />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Thanh toán VNPay</Text>
+          <Text style={styles.headerTitle}>Thanh toán Vnpay</Text>
           <View style={styles.headerRight} />
         </View>
         <WebView
@@ -108,6 +114,7 @@ export default function PaymentScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+         <LoadingOverlayView visible={isLoading} text="Đang xử lí..." />
       <StatusBar barStyle="light-content" backgroundColor="#1c1c1c" />
       
       {/* Header */}
@@ -195,7 +202,12 @@ export default function PaymentScreen() {
           </View>
                   
           <View style={styles.priceInfoContainer}>
-            <Text style={styles.currentPrice}>US$240</Text>
+            <Text style={styles.currentPrice}>Tổng tiền:{' '}
+            {calculateTotalPrice().toLocaleString('vi-VN', { 
+                style: 'currency', 
+                currency: 'VND' 
+              })}
+            </Text>
           </View>
           
           <Text style={styles.taxInfo}>
@@ -211,6 +223,14 @@ export default function PaymentScreen() {
           style={styles.bookingButton}
         />
       </View>
+
+      <PaymentInfoModal 
+        visible={isPaymentInfoModalVisible}
+        onClose={() => {
+          setIsPaymentInfoModalVisible(false);
+        }}
+        bookingCode={bookingCode}
+      />
     </SafeAreaView>
   );
 }
@@ -218,24 +238,25 @@ export default function PaymentScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#222',
+    backgroundColor: '#333',
   },
   container: {
     flex: 1,
+    backgroundColor:'#222'
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 15,
-    paddingHorizontal: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
   },
   backButton: {
     padding: 5,
   },
   headerTitle: {
     color: 'white',
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: 'bold',
   },
   headerRight: {

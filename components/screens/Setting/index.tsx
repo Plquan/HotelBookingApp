@@ -8,6 +8,7 @@ import {
   ScrollView,
   Modal,
   Alert,
+  StatusBar,
 } from 'react-native';
 import MainLayout from '@/components/Layouts/MainLayout';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -21,7 +22,7 @@ import CustomButton from '@/components/ui/Button';
 import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
 
 // Import styles từ file riêng
-import styles from '@/components/screens/Setting/Setting.style'
+import styles from '@/components/screens/Setting/Setting.style';
 
 export default function SettingScreen() {
   const router = useRouter();
@@ -129,8 +130,11 @@ export default function SettingScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-       <LoadingOverlayView visible={isLoading} text="Xin chờ trong giây lát" />
-      <ScrollView contentContainerStyle={styles.loggedInContainer}>
+      <StatusBar barStyle="light-content" backgroundColor="#333" />
+      <LoadingOverlayView visible={isLoading} text="Xin chờ trong giây lát" />
+
+      {/* Fixed Header */}
+      <View style={styles.fixedHeader}>
         <View style={styles.userHeader}>
           <View style={styles.userInfo}>
             <TouchableOpacity onPress={toggleModal}>
@@ -157,7 +161,14 @@ export default function SettingScreen() {
             </TouchableOpacity>
           </View>
         </View>
+      </View>
 
+      {/* Scrollable Content */}
+      <ScrollView 
+        style={styles.scrollContent}
+        contentContainerStyle={styles.scrollContentContainer}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>Quản lí tài khoản</Text>
           <View style={styles.settingRowContainer}>
@@ -213,40 +224,40 @@ export default function SettingScreen() {
             style={styles.logoutButton}
           />
         </View>
-
-        <Modal
-          visible={isModalVisible}
-          animationType="slide"
-          transparent={true}
-          onRequestClose={toggleModal}
-        >
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalContainer}>
-              <Text style={styles.modalTitle}>Tùy chọn ảnh đại diện</Text>
-              <TouchableOpacity
-                style={styles.modalOption}
-                onPress={openImageLibrary}
-              >
-                <FontAwesome5 name="images" size={20} color="#B58E50" style={styles.modalOptionIcon} />
-                <Text style={styles.modalOptionText}>Chọn từ thư viện</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.modalOption}
-                onPress={toggleModal}
-              >
-                <FontAwesome5 name="eye" size={20} color="#B58E50" style={styles.modalOptionIcon} />
-                <Text style={styles.modalOptionText}>Xem ảnh đại diện</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.modalCancel}
-                onPress={toggleModal}
-              >
-                <Text style={styles.modalCancelText}>Hủy</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
       </ScrollView>
+
+      <Modal
+        visible={isModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={toggleModal}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Tùy chọn ảnh đại diện</Text>
+            <TouchableOpacity
+              style={styles.modalOption}
+              onPress={openImageLibrary}
+            >
+              <FontAwesome5 name="images" size={20} color="#B58E50" style={styles.modalOptionIcon} />
+              <Text style={styles.modalOptionText}>Chọn từ thư viện</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalOption}
+              onPress={toggleModal}
+            >
+              <FontAwesome5 name="eye" size={20} color="#B58E50" style={styles.modalOptionIcon} />
+              <Text style={styles.modalOptionText}>Xem ảnh đại diện</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalCancel}
+              onPress={toggleModal}
+            >
+              <Text style={styles.modalCancelText}>Hủy</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }

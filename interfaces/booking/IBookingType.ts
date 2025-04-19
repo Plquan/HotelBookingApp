@@ -35,3 +35,32 @@ export interface IPaymentData {
     name?: string;
     booking?: IBookingRequestData
 }
+
+  export interface RoomImage {
+    id: number;
+    roomTypeId: number;
+    url: string;
+  }
+
+  export interface ISelectedRoom{
+    id:number,
+    name:string,
+    count:number,
+    originalPrice:number,
+    totalPrice:number,
+    image:string
+  }
+
+  export interface ICheckRoomData {
+    id: number;
+    name: string;
+    content: string;
+    slug: string;
+    capacity: number;
+    price: number;
+    view: string;
+    bedType: string;
+    size?: string;
+    availableRooms: number;
+    roomImages: RoomImage[];
+  }
