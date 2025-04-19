@@ -111,7 +111,6 @@ export default function CheckRoomScreen() {
       new Date(toDate), 
       new Date(fromDate)
     );
-    
     const selectedRooms: ISelectedRoom[] = chooseRoom.map(room => {
       const roomDetails = availableRooms.find(ar => ar.id === room.roomTypeId);
       

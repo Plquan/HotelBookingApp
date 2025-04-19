@@ -1,6 +1,6 @@
 import axios from "axios";
 import env from "@/constants/envConstant";
-import accessToken from "../functions/accessToken";
+import {getAccessToken} from "../functions/accessToken";
 
 const http = axios.create({
   baseURL: env.API_URL,
@@ -10,7 +10,7 @@ const http = axios.create({
   withCredentials: true,
 });
 http.interceptors.request.use(async (config) => {
-  const token = await accessToken.getAccessToken()
+  const token = await getAccessToken()
   if (token !== undefined) {
     config.headers.Authorization = "Bearer " + token;
   }

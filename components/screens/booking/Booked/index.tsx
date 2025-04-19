@@ -8,31 +8,34 @@ import {
   ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
 import { styles } from './BookedScreen.style';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { bookingAction } from '@/stores/bookingStore/bookingReducer';
-import { useDispatch, UseDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/stores';
-
+import BookedDetailModal from './components/BookedDetailModal';
+import { IBookedData } from '@/interfaces/booking/IBookedType';
 
 const BookedScreen = () => {
-  const [activeTab, setActiveTab] = useState('active'); // 'active', 'past', 'cancelled'
- const dispatch = useDispatch<AppDispatch>();
- const bookedRoom = useSelector((state: RootState) => state.bookingStore.bookedRoom);
+  const [activeTab, setActiveTab] = useState('active');
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState<IBookedData>();
 
- useEffect(()=>{
-  dispatch(bookingAction.getBooked())
- },[])
- 
-  const handleLogin = () => {
-    router.push('/(auth)/login');
-  };
+  const dispatch = useDispatch<AppDispatch>();
+  const bookedRoom = useSelector((state: RootState) => state.bookingStore.bookedRoom);
+
+  useEffect(() => {
+    dispatch(bookingAction.getBooked())
+  }, [])
 
   const handleTabPress = (tabName: string) => {
-    // setActiveTab(tabName);
-    console.log('abc',bookedRoom)
+    setActiveTab(tabName);
   };
+
+  const handleDetail = (room: any) => {
+    setSelectedRoom(room);
+    setIsModalVisible(true);
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -80,27 +83,35 @@ const BookedScreen = () => {
         </TouchableOpacity>
       </View>
       
-      {/* TRIP CARD */}
-      
-        
-      
       <ScrollView style={styles.content}>
-      {
-            bookedRoom.map((room) => (
-              <TouchableOpacity style={styles.tripCard} key={room.id}>
-              <Image 
-                source={{ uri: "https://currently-together-squid.ngrok-free.app/images/" + (room.roomTypes?.[0]?.roomImages?.[0]?.url || 'default-image.jpg') }}
-                style={styles.tripImage}
-              />
-              <View style={styles.tripDetails}>
-                <Text style={styles.tripLocation}>Vũng Tàu</Text>
-                <Text style={styles.tripDate}>16 – 17 thg 4, 2025 · 1 đơn đặt</Text>
-              </View>
-              <Feather name="chevron-right" size={24} color="#fff" style={styles.chevronIcon} />
-            </TouchableOpacity>
-            ))}
+        {bookedRoom.map((room) => (
+          <TouchableOpacity 
+            style={styles.tripCard} 
+            key={room.id} 
+            onPress={() => handleDetail(room)}
+          >
+            <Image 
+              source={{ 
+                uri: "https://currently-together-squid.ngrok-free.app/images/" + 
+                     (room.roomTypes?.[0]?.roomImages?.[0]?.url || 'default-image.jpg') 
+              }}
+              style={styles.tripImage}
+            />
+            <View style={styles.tripDetails}>
+              <Text style={styles.tripLocation}>Vũng Tàu</Text>
+              <Text style={styles.tripDate}>16 – 17 thg 4, 2025 · 1 đơn đặt</Text>
+            </View>
+            <Feather name="chevron-right" size={24} color="#fff" style={styles.chevronIcon} />
+          </TouchableOpacity>
+        ))}
+        <View style={{ height: 80 }} />
       </ScrollView>
 
+      <BookedDetailModal
+        visible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        room={selectedRoom}
+      />
     </SafeAreaView>
   );
 };

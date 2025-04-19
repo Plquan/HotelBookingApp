@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ICurrentUser } from "@/interfaces/auth/AuthType";
-import accessToken from "@/utils/functions/accessToken";
+import {getAccessToken} from "@/utils/functions/accessToken";
 import { authThunks } from "./authThunk";
 
 export interface AuthState {
@@ -13,7 +13,7 @@ export interface AuthState {
   }
   
   const initialState: AuthState = {
-    token: accessToken.getAccessToken()?.toString() || null,
+    token: getAccessToken()?.toString() || null,
     isAuthenticated: false,
     loading: false,
     error: null,

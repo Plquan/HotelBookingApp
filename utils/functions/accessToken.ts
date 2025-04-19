@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const getAccessToken = async (): Promise<string | undefined> => {
+export const getAccessToken = async (): Promise<string | undefined> => {
   try {
     const accessToken = await AsyncStorage.getItem("accessToken");
     return accessToken ?? undefined;
@@ -10,7 +10,7 @@ const getAccessToken = async (): Promise<string | undefined> => {
   }
 };
 
-const removeAccessToken = async (): Promise<void> => {
+export const removeAccessToken = async (): Promise<void> => {
     try {
       await AsyncStorage.removeItem("accessToken");
       console.log("Đã xóa accessToken thành công");
@@ -19,8 +19,3 @@ const removeAccessToken = async (): Promise<void> => {
     }
   };
 
-const accessToken = {
-    getAccessToken,
-    removeAccessToken
-}  
-export default accessToken;
