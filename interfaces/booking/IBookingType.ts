@@ -61,6 +61,7 @@ export interface IPaymentData {
     view: string;
     bedType: string;
     size?: string;
+    isSaved:boolean;
     availableRooms: number;
     roomImages: RoomImage[];
   }

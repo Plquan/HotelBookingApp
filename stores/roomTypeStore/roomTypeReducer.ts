@@ -1,15 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { IRoomTypeData } from "@/interfaces/roomType/IRoomDTO";
 import roomTypeThunks from "./roomTypeThunk";
+import { ICheckRoomData } from "@/interfaces/booking/IBookingType";
 
 interface AreaState {
     roomTypes: IRoomTypeData[];
+    savedRoom:ICheckRoomData[];
     loading: boolean;
     error: string | null;
 }
 
 const initialState: AreaState = {
     roomTypes: [],
+    savedRoom:[],
     loading: false,
     error: null,
 };
@@ -17,7 +20,11 @@ const initialState: AreaState = {
 export const roomTypeSlice = createSlice({
     name: "roomType",
     initialState,
-    reducers: {},
+    reducers: {
+       saveRoom:(state,action) => {
+        state.roomTypes = action.payload
+        }
+    },
     extraReducers: (builder) => {
         builder
               .addCase(roomTypeThunks.getRoomTypeData.pending, (state) => {

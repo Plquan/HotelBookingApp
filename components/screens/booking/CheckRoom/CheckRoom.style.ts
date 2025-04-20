@@ -74,8 +74,8 @@ export const styles = StyleSheet.create({
   },
   favoriteButton: {
     position: 'absolute',
-    top: -7,
-    right: -7,
+    top: 0,
+    right: 0,
     borderRadius: 15,
     padding: 6,
     zIndex: 1,
