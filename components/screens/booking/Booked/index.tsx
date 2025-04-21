@@ -15,6 +15,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/stores';
 import BookedDetailModal from './components/BookedDetailModal';
 import { IBookedData } from '@/interfaces/booking/IBookedType';
+import CustomHeader from '@/components/ui/CustomHeader';
+import { socketService } from '@/services/socketService';
+import Toast from 'react-native-toast-message';
+import { getStatusInfo } from '@/constants/Status';
+import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
+
+const formatDateToVietnamese = (date: Date) => {
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  return `${day} thg${month} - ${year}`;
+};
 
 const BookedScreen = () => {
   const [activeTab, setActiveTab] = useState('active');
@@ -22,11 +34,50 @@ const BookedScreen = () => {
   const [selectedRoom, setSelectedRoom] = useState<IBookedData>();
 
   const dispatch = useDispatch<AppDispatch>();
-  const bookedRoom = useSelector((state: RootState) => state.bookingStore.bookedRoom);
+  const {bookedRoom,loading} = useSelector((state: RootState) => state.bookingStore);
 
   useEffect(() => {
-    dispatch(bookingAction.getBooked())
-  }, [])
+    let isSubscribed = true;
+
+    const initializeSocket = async () => {
+      try {
+        // First ensure connection is stopped
+        await socketService.stopConnection();
+        
+        // Then start new connection
+        await socketService.startConnection();
+
+        if (isSubscribed) {
+          socketService.onBookingStatusUpdated((data) => {
+            if (data.isSuccess) {
+              Toast.show({
+                type: 'info',
+                text1: `${data.message}`,
+                position: 'top'
+              });
+              dispatch(bookingAction.updateBookedRoomStatus({ 
+                bookingId: data.bookingId, 
+                status: data.status 
+              }));
+            }
+          });
+        }
+      } catch (error) {
+        console.log('Socket connection error:', error);
+      }
+    };
+
+    initializeSocket();
+
+    return () => {
+      isSubscribed = false;
+      socketService.stopConnection();
+    };
+  }, []);
+
+  useEffect(() => {
+    dispatch(bookingAction.getBooked());
+  }, []);
 
   const handleTabPress = (tabName: string) => {
     setActiveTab(tabName);
@@ -35,24 +86,34 @@ const BookedScreen = () => {
   const handleDetail = (room: any) => {
     setSelectedRoom(room);
     setIsModalVisible(true);
-  }
+  };
+
+  const filteredRooms = bookedRoom.filter(room => {
+    const status = room.status || "";
+  
+    switch (activeTab) {
+      case 'active':
+        return ['Pending', 'Confirmed', 'CheckIn'].includes(status);
+      case 'past':
+        return status === 'CheckOut';
+      case 'cancelled':
+        return status === 'Cancelled';
+      default:
+        return true;
+    }
+  });
+  
 
   return (
     <SafeAreaView style={styles.container}>
+      <LoadingOverlayView visible={loading} text="Đang tải..." />
       <StatusBar barStyle="light-content" backgroundColor="#222" />
       
       {/* HEADER */}
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerTitle}>Chuyến đi</Text>
-        <View style={styles.headerIcons}>
-          <TouchableOpacity style={styles.iconButton}>
-            <Feather name="help-circle" size={24} color="#fff" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton}>
-            <Feather name="download" size={24} color="#fff" />
-          </TouchableOpacity>
-        </View>
-      </View>
+      <CustomHeader 
+                title="Chuyến đi" 
+                showBackButton={false}
+            />
       
       <View style={styles.tabContainer}>
         <TouchableOpacity 
@@ -84,26 +145,35 @@ const BookedScreen = () => {
       </View>
       
       <ScrollView style={styles.content}>
-        {bookedRoom.map((room) => (
-          <TouchableOpacity 
-            style={styles.tripCard} 
-            key={room.id} 
-            onPress={() => handleDetail(room)}
-          >
-            <Image 
-              source={{ 
-                uri: "https://currently-together-squid.ngrok-free.app/images/" + 
-                     (room.roomTypes?.[0]?.roomImages?.[0]?.url || 'default-image.jpg') 
-              }}
-              style={styles.tripImage}
-            />
-            <View style={styles.tripDetails}>
-              <Text style={styles.tripLocation}>Vũng Tàu</Text>
-              <Text style={styles.tripDate}>16 – 17 thg 4, 2025 · 1 đơn đặt</Text>
-            </View>
-            <Feather name="chevron-right" size={24} color="#fff" style={styles.chevronIcon} />
-          </TouchableOpacity>
-        ))}
+        {filteredRooms.map((room) => {
+          const { label, color, backgroundColor } = getStatusInfo(room.status || '');
+          return (
+            <TouchableOpacity 
+              style={styles.tripCard} 
+              key={room.id} 
+              onPress={() => handleDetail(room)}
+            >
+              <Image 
+                source={{ 
+                  uri: "https://currently-together-squid.ngrok-free.app/images/" + 
+                       (room.roomTypes?.[0]?.roomImages?.[0]?.url || 'default-image.jpg') 
+                }}
+                style={styles.tripImage}
+              />
+              <View style={styles.tripDetails}>
+                <View style={styles.tripInfo}>
+                  <Text style={styles.tripDate}>
+                    {formatDateToVietnamese(new Date(room.fromDate))} - {formatDateToVietnamese(new Date(room.toDate))}
+                  </Text>
+                </View>
+                <View style={[styles.statusBadge, { backgroundColor }]}>
+                  <Text style={[styles.statusText, { color }]}>{label}</Text>
+                </View>
+              </View>
+              <Feather name="chevron-right" size={24} color="#fff" style={styles.chevronIcon} />
+            </TouchableOpacity>
+          );
+        })}
         <View style={{ height: 80 }} />
       </ScrollView>
 

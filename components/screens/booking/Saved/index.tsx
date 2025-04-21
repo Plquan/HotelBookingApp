@@ -10,26 +10,24 @@ import {
   StatusBar,
 } from 'react-native';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { roomTypeAction } from '@/stores/roomTypeStore/roomTypeReducer';
 import { AppDispatch, RootState } from '@/stores';
 import { ICheckRoomData } from '@/interfaces/booking/IBookingType';
 import { useDispatch, useSelector } from 'react-redux';
-import Toast from 'react-native-toast-message';
 import SaveRoom from '@/components/ui/SavedIcon';
 import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
+import CustomHeader from '@/components/ui/CustomHeader';
 
 export default function SavedScreen() {
     const dispatch = useDispatch<AppDispatch>();
-    const {savedRoom,loading} = useSelector(
+    const {savedRoom, loading} = useSelector(
         (state: RootState) => state.roomTypeStore
     );
 
     useEffect(() => {
         dispatch(roomTypeAction.getListSavedRoom());
     }, [dispatch]);
-
 
     const renderEmptyState = () => (
         <View style={styles.emptyContainer}>
@@ -66,7 +64,7 @@ export default function SavedScreen() {
                             roomId={item.id} 
                             isSaved={item.isSaved} 
                             style={styles.favoriteButton}
-                            />
+                        />
                         <Text numberOfLines={2} ellipsizeMode="tail" style={styles.hotelName}>
                             {item.name}
                         </Text>
@@ -93,70 +91,39 @@ export default function SavedScreen() {
     );
 
     return (
-        <SafeAreaView style={styles.container}>
-              <LoadingOverlayView visible={loading} text="Đang tải" />
-            <StatusBar barStyle="light-content" backgroundColor="#222" />
+        <SafeAreaView style={styles.safeArea}>
+            <LoadingOverlayView visible={loading} text="Đang tải" />
+            <StatusBar barStyle="light-content" backgroundColor="#1c1c1c" />
             
-      
-      {/* HEADER */}
-            <View style={styles.headerContainer}>
-                <Text style={styles.headerTitle}>Phòng đã lưu</Text>
-                <View style={styles.headerIcons}>
-                <TouchableOpacity style={styles.iconButton}>
-                    <Feather name="help-circle" size={24} color="#fff" />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.iconButton}>
-                    <Feather name="download" size={24} color="#fff" />
-                </TouchableOpacity>
-                </View>
-            </View>
-
-        <View style={styles.content}>
-
-        <FlatList
-                data={savedRoom}
-                renderItem={renderRoomItem}
-                ListEmptyComponent={renderEmptyState}
-                keyExtractor={item => item.id.toString()}
-                contentContainerStyle={styles.listContent}
+            {/* Using the new CustomHeader component */}
+            <CustomHeader 
+                title="Phòng đã lưu" 
+                showBackButton={false}
             />
-        </View>
-           
-            
+
+            <View style={styles.content}>
+                <FlatList
+                    data={savedRoom}
+                    renderItem={renderRoomItem}
+                    ListEmptyComponent={renderEmptyState}
+                    keyExtractor={item => item.id.toString()}
+                    contentContainerStyle={styles.listContent}
+                />
+            </View>
         </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
+    safeArea: {
         flex: 1,
-        backgroundColor: '#222',
+        backgroundColor: '#333',
     },
     content: {
         flex: 1,
         backgroundColor: '#222',
         paddingTop: 20,
         paddingBottom: 20,
-    },
-    headerContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingVertical: 16,
-        paddingHorizontal: 16,
-        backgroundColor: '#222',
-    },
-    headerTitle: {
-        color: '#fff',
-        fontSize: 24,
-        fontWeight: 'bold',
-    },
-    headerIcons: {
-        flexDirection: 'row',
-        gap: 20,
-    },
-    iconButton: {
-        padding: 4,
     },
     hotelItem: {
         backgroundColor: '#333',

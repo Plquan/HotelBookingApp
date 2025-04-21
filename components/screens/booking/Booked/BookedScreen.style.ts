@@ -85,19 +85,29 @@ export const styles = StyleSheet.create({
     padding: 16,
     paddingRight: 40,
   },
-  tripLocation: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 2,
-  },
   tripDate: {
-    color: '#aaa',
-    fontSize: 14,
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 8,
   },
   chevronIcon: {
     position: 'absolute',
     right: 16,
     bottom: 24,
+  },
+  statusBadge: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginTop: 8,
+    alignSelf: 'flex-start',
+  },
+  statusText: {
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  tripInfo: {
+    flex: 1,
   }
 });

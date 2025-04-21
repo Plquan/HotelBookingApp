@@ -12,7 +12,6 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import CustomButton from '@/components/ui/Button';
-import authSevices from '@/services/authServices';
 import { IPaymentData } from '@/interfaces/booking/IBookingType';
 import { useDispatch, useSelector } from 'react-redux';
 import { bookingAction } from '@/stores/bookingStore/bookingReducer';
@@ -22,6 +21,7 @@ import {formatDateOnly} from '@/utils/functions/formatDate';
 import { WebView } from 'react-native-webview';
 import PaymentInfoModal from './components/PaymentInfoModal';
 import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
+import CustomHeader from '@/components/ui/CustomHeader';
 
 export default function PaymentScreen() {
   const router = useRouter();
@@ -94,13 +94,12 @@ export default function PaymentScreen() {
   if (isWebViewVisible && paymentUrl) {
     return (
       <SafeAreaView style={styles.safeArea}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-            <Ionicons name="chevron-back" size={24} color="white" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Thanh toán Vnpay</Text>
-          <View style={styles.headerRight} />
-        </View>
+        {/* Using the new CustomHeader component in WebView mode */}
+        <CustomHeader
+          title="Thanh toán Vnpay"
+          showBackButton={true}
+          onBackPress={handleBack}
+        />
         <WebView
           source={{ uri: paymentUrl }}
           style={styles.webView}
@@ -114,17 +113,15 @@ export default function PaymentScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-         <LoadingOverlayView visible={isLoading} text="Đang xử lí..." />
+      <LoadingOverlayView visible={isLoading} text="Đang xử lí..." />
       <StatusBar barStyle="light-content" backgroundColor="#1c1c1c" />
       
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-          <Ionicons name="chevron-back" size={24} color="white" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Thông tin thanh toán</Text>
-        <View style={styles.headerRight} />
-      </View>
+      {/* Using the new CustomHeader component */}
+      <CustomHeader
+        title="Thông tin thanh toán"
+        showBackButton={true}
+        onBackPress={handleBack}
+      />
 
       <ScrollView style={styles.container}>
         <View style={styles.sectionContainer}>
@@ -243,24 +240,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor:'#222'
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-  },
-  backButton: {
-    padding: 5,
-  },
-  headerTitle: {
-    color: 'white',
-    fontSize: 15,
-    fontWeight: 'bold',
-  },
-  headerRight: {
-    width: 24,
   },
   paymentIcon: {
     width: 45,
