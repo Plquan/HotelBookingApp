@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { TouchableOpacity, StyleSheet, ActivityIndicator, View } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import roomServices from '@/services/roomService';
+import { AppDispatch } from '@/stores';
+import { roomTypeAction } from '@/stores/roomTypeStore/roomTypeReducer';
+import { useDispatch } from 'react-redux';
 
 interface SaveRoomProps {
   roomId: number;
@@ -24,13 +27,21 @@ const SaveRoom: React.FC<SaveRoomProps> = ({
 }) => {
   const [saved, setSaved] = useState<boolean>(isSaved);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const dispatch = useDispatch<AppDispatch>()
 
   const handleSave = async () => {
     if (isLoading) return; 
     
     try {
       setIsLoading(true);
+      
       const res = await roomServices.saveRoom(roomId);
+      if(saved === true) {
+        dispatch(roomTypeAction.removeSavedRoom(roomId))
+      }
+      else{
+        dispatch(roomTypeAction.getListSavedRoom())      
+      }
       setSaved(!saved);
       return res;
     } catch (error) {

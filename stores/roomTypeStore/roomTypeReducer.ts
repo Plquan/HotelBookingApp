@@ -20,9 +20,9 @@ const initialState: AreaState = {
 export const roomTypeSlice = createSlice({
     name: "roomType",
     initialState,
-    reducers: {
-       saveRoom:(state,action) => {
-        state.roomTypes = action.payload
+    reducers: {    
+        removeSavedRoom: (state, action) => {
+            state.savedRoom = state.savedRoom.filter(room => room.id !== action.payload);
         }
     },
     extraReducers: (builder) => {
@@ -39,6 +39,22 @@ export const roomTypeSlice = createSlice({
                     state.loading = false;
                     state.error = action.payload as string;
             });
+
+        builder
+              .addCase(roomTypeThunks.getListSavedRoom.pending,(state) => {
+                state.loading = true
+                state.error = null
+              })
+              .addCase(roomTypeThunks.getListSavedRoom.fulfilled,(state,action)=> {
+                 if(action.payload.isSuccess){
+                    state.savedRoom = action.payload.data ?? []
+                 }
+                 state.loading = false
+              })
+              .addCase(roomTypeThunks.getListSavedRoom.rejected,(state,action) => {
+                state.loading = false;
+                state.error = action.payload as string;
+              })
     },
 
 });
