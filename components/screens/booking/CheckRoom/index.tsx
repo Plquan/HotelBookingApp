@@ -13,7 +13,6 @@ import { useRouter } from 'expo-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/stores/index';
 import bookingServices from '@/services/bookingServices';
-import { IRoomTypeData } from '@/interfaces/roomType/IRoomDTO';
 import env from '@/constants/envConstant';
 import { styles } from './CheckRoom.style';
 import { IChooseRoom } from '@/interfaces/booking/IBookingType';
@@ -25,6 +24,9 @@ import { bookingAction } from '@/stores/bookingStore/bookingReducer';
 import { ICheckRoomData } from "@/interfaces/booking/IBookingType";
 import { ISelectedRoom } from '@/interfaces/booking/IBookingType';
 import { differenceInDays } from 'date-fns';
+import roomServices from '@/services/roomService';
+import SaveRoom from '@/components/ui/SavedIcon';
+
 export default function CheckRoomScreen() {
   const bookingData = useSelector((state: RootState) => state.bookingStore.bookingData);
 
@@ -123,13 +125,14 @@ export default function CheckRoomScreen() {
         image: roomDetails?.roomImages[0]?.url || ''
       };
     });
-   console.log(selectedRooms)
+    
     dispatch(bookingAction.setSelectedRoom(selectedRooms))
     dispatch(bookingAction.setBookingData({
           chooseRooms:chooseRoom
     }))
     router.push('/(booking)/guestInfo');
   };
+
 
   const renderHotelItem = ({ item }: { item: ICheckRoomData }) => (
     <TouchableOpacity
@@ -146,9 +149,11 @@ export default function CheckRoomScreen() {
             />
           </View>
           <View style={styles.hotelInfo}>
-            <TouchableOpacity style={styles.favoriteButton}>
-              <FontAwesome name="heart-o" size={22} color="white" />
-            </TouchableOpacity>
+          <SaveRoom 
+              roomId={item.id} 
+              isSaved={item.isSaved} 
+              style={styles.favoriteButton}
+            />
             <Text numberOfLines={2} ellipsizeMode="tail" style={styles.hotelName}>
               {item.name}
             </Text>

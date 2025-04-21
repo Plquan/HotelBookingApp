@@ -25,6 +25,7 @@ import Toast from 'react-native-toast-message';
 import { IChooseRoom } from '@/interfaces/booking/IBookingType';
 import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
 import CustomDatePicker from '@/components/ui/BookingDatePicker';
+import SaveRoom from '@/components/ui/SavedIcon';
 
 const IMAGE_URL = env.IMAGE_URL;
 
@@ -117,9 +118,11 @@ export default function RoomDetailScreen() {
           />
         </View>
         <View style={styles.headerIcons}>
-          <TouchableOpacity style={styles.headerIconButton} onPress={toggleFavorite}>
-            <FontAwesome name={isFavorite ? "heart" : "heart-o"} size={22} color="white" />
-          </TouchableOpacity>
+        <SaveRoom 
+          roomId={Number(id)} 
+          isSaved={isFavorite}
+          style={styles.headerIconButton}
+        />
           <TouchableOpacity onPress={handleShare} style={styles.headerIconButton}>
             <Ionicons name="share-outline" size={24} color="white" />
           </TouchableOpacity>

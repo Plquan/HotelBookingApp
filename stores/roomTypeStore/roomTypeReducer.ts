@@ -1,15 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { IRoomTypeData } from "@/interfaces/roomType/IRoomDTO";
 import roomTypeThunks from "./roomTypeThunk";
+import { ICheckRoomData } from "@/interfaces/booking/IBookingType";
 
 interface AreaState {
     roomTypes: IRoomTypeData[];
+    savedRoom:ICheckRoomData[];
     loading: boolean;
     error: string | null;
 }
 
 const initialState: AreaState = {
     roomTypes: [],
+    savedRoom:[],
     loading: false,
     error: null,
 };
@@ -17,7 +20,11 @@ const initialState: AreaState = {
 export const roomTypeSlice = createSlice({
     name: "roomType",
     initialState,
-    reducers: {},
+    reducers: {    
+        removeSavedRoom: (state, action) => {
+            state.savedRoom = state.savedRoom.filter(room => room.id !== action.payload);
+        }
+    },
     extraReducers: (builder) => {
         builder
               .addCase(roomTypeThunks.getRoomTypeData.pending, (state) => {
@@ -32,6 +39,22 @@ export const roomTypeSlice = createSlice({
                     state.loading = false;
                     state.error = action.payload as string;
             });
+
+        builder
+              .addCase(roomTypeThunks.getListSavedRoom.pending,(state) => {
+                state.loading = true
+                state.error = null
+              })
+              .addCase(roomTypeThunks.getListSavedRoom.fulfilled,(state,action)=> {
+                 if(action.payload.isSuccess){
+                    state.savedRoom = action.payload.data ?? []
+                 }
+                 state.loading = false
+              })
+              .addCase(roomTypeThunks.getListSavedRoom.rejected,(state,action) => {
+                state.loading = false;
+                state.error = action.payload as string;
+              })
     },
 
 });
