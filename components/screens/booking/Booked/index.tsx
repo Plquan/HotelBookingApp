@@ -50,11 +50,6 @@ const BookedScreen = () => {
         if (isSubscribed) {
           socketService.onBookingStatusUpdated((data) => {
             if (data.isSuccess) {
-              Toast.show({
-                type: 'info',
-                text1: `${data.message}`,
-                position: 'top'
-              });
               dispatch(bookingAction.updateBookedRoomStatus({ 
                 bookingId: data.bookingId, 
                 status: data.status 

@@ -28,6 +28,9 @@ export interface AuthState {
             state.token = null;
             state.isAuthenticated = false;
             state.currentUser = null;
+        },
+        updateCurrentUser: (state, action) => {
+            state.currentUser = action.payload;
         }
     },
     extraReducers: (builder) => {

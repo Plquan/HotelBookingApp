@@ -36,6 +36,7 @@ export default function SettingScreen() {
   );
   
   const [isModalVisible, setModalVisible] = useState(false);
+  const [currentLanguage, setCurrentLanguage] = useState('vi');
 
   const handleLogin = async () => {
     router.push('/(auth)/login');
@@ -128,6 +129,10 @@ export default function SettingScreen() {
     );
   }
 
+  const toggleLanguage = () => {
+    setCurrentLanguage(currentLanguage === 'vi' ? 'en' : 'vi');
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="light-content" backgroundColor="#333" />
@@ -172,7 +177,7 @@ export default function SettingScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>Quản lí tài khoản</Text>
           <View style={styles.settingRowContainer}>
-            <TouchableOpacity style={styles.settingRow}>
+            <TouchableOpacity style={styles.settingRow} onPress={() => router.push('/(account)/profile')}>
               <View style={styles.settingIconContainer}>
                 <FontAwesome5 name="question-circle" size={20} color="#B58E50" />
               </View>
@@ -184,11 +189,14 @@ export default function SettingScreen() {
                 style={styles.rowArrow}
               />
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.settingRow, styles.lastSettingRow]}>
+            <TouchableOpacity 
+              style={[styles.settingRow, styles.lastSettingRow]} 
+              onPress={() => router.push('/(account)/changePassword')}
+            >
               <View style={styles.settingIconContainer}>
                 <FontAwesome5 name="shield-alt" size={20} color="#B58E50" />
               </View>
-              <Text style={styles.settingText}>Trung tâm thông tin và bảo mật</Text>
+              <Text style={styles.settingText}>Mật khẩu và bảo mật</Text>
               <FontAwesome5
                 name="chevron-right"
                 size={16}
@@ -198,7 +206,7 @@ export default function SettingScreen() {
             </TouchableOpacity>
           </View>
         </View>
-
+       
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>Dành cho chủ chỗ nghỉ</Text>
           <View style={styles.settingRowContainer}>
@@ -217,6 +225,45 @@ export default function SettingScreen() {
           </View>
         </View>
 
+        <View style={styles.section}>
+          <Text style={styles.sectionHeader}>Cài đặt</Text>
+          <View style={styles.settingRowContainer}>
+            <TouchableOpacity style={styles.settingRow} onPress={toggleLanguage}>
+              <View style={styles.settingIconContainer}>
+                <FontAwesome5 name="language" size={20} color="#B58E50" />
+              </View>
+              <Text style={styles.settingText}>Ngôn ngữ</Text>
+              <View style={styles.settingValueContainer}>
+                <Text style={styles.settingValue}>
+                  {currentLanguage === 'vi' ? 'Tiếng Việt' : 'English'}
+                </Text>
+                <FontAwesome5
+                  name="chevron-right"
+                  size={16}
+                  color="#8E8E93"
+                  style={styles.rowArrow}
+                />
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={[styles.settingRow, styles.lastSettingRow]}>
+              <View style={styles.settingIconContainer}>
+                <FontAwesome5 name="sun" size={20} color="#B58E50" />
+              </View>
+              <Text style={styles.settingText}>Giao diện</Text>
+              <View style={styles.settingValueContainer}>
+                <Text style={styles.settingValue}>Tối</Text>
+                <FontAwesome5
+                  name="chevron-right"
+                  size={16}
+                  color="#8E8E93"
+                  style={styles.rowArrow}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+
         <View style={styles.logoutSection}>
           <CustomButton
             title="Đăng xuất"
@@ -228,35 +275,23 @@ export default function SettingScreen() {
 
       <Modal
         visible={isModalVisible}
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         onRequestClose={toggleModal}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Tùy chọn ảnh đại diện</Text>
-            <TouchableOpacity
-              style={styles.modalOption}
-              onPress={openImageLibrary}
-            >
-              <FontAwesome5 name="images" size={20} color="#B58E50" style={styles.modalOptionIcon} />
-              <Text style={styles.modalOptionText}>Chọn từ thư viện</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.modalOption}
-              onPress={toggleModal}
-            >
-              <FontAwesome5 name="eye" size={20} color="#B58E50" style={styles.modalOptionIcon} />
-              <Text style={styles.modalOptionText}>Xem ảnh đại diện</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.modalCancel}
-              onPress={toggleModal}
-            >
-              <Text style={styles.modalCancelText}>Hủy</Text>
-            </TouchableOpacity>
+        <TouchableOpacity 
+          style={styles.modalOverlay} 
+          activeOpacity={1} 
+          onPress={toggleModal}
+        >
+          <View style={styles.modalImageContainer}>
+            <Image
+              source={require('@/assets/images/avatar.png')}
+              style={styles.zoomedAvatar}
+              resizeMode="cover"
+            />
           </View>
-        </View>
+        </TouchableOpacity>
       </Modal>
     </SafeAreaView>
   );

@@ -173,8 +173,9 @@ export default StyleSheet.create({
   // Modal styles
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   modalContainer: {
     backgroundColor: '#1C1C1E', 
@@ -212,5 +213,27 @@ export default StyleSheet.create({
     color: '#FF3B30',
     textAlign: 'center',
     fontWeight: '500',
+  },
+  // Add these new styles
+  settingValueContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  settingValue: {
+    color: '#8E8E93',
+    marginRight: 8,
+    fontSize: 14,
+  },
+  modalImageContainer: {
+    width: 280,
+    height: 280,
+    borderRadius: 140,
+    overflow: 'hidden',
+    borderWidth: 3,
+    borderColor: '#B58E50',
+  },
+  zoomedAvatar: {
+    width: '100%',
+    height: '100%',
   },
 });
