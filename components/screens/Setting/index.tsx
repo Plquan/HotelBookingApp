@@ -20,6 +20,8 @@ import authSevices from '@/services/authServices';
 import { authAction } from '@/stores/authStore/authReducer';
 import CustomButton from '@/components/ui/Button';
 import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
+import  env from '@/constants/envConstant';
+const {IMAGE_URL} = env
 
 // Import styles từ file riêng
 import styles from '@/components/screens/Setting/Setting.style';
@@ -77,32 +79,6 @@ export default function SettingScreen() {
     );
   };
 
-  // Hàm mở thư viện ảnh
-  const openImageLibrary = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    
-    if (status !== 'granted') {
-      Alert.alert(
-        'Cần quyền truy cập',
-        'Ứng dụng cần quyền truy cập vào thư viện ảnh của bạn để chọn avatar.'
-      );
-      return;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 0.7,
-    });
-
-    if (!result.canceled && result.assets && result.assets.length > 0) {
-      toggleModal();
-      console.log('Selected image URI:', result.assets[0].uri);
-      Alert.alert('Thành công', 'Ảnh đại diện đã được chọn thành công!');
-    }
-  };
-
   if (!isAuthenticated) {
     return (
       <MainLayout>
@@ -145,7 +121,7 @@ export default function SettingScreen() {
             <TouchableOpacity onPress={toggleModal}>
               <View style={styles.avatarWrapper}>
                 <Image
-                  source={require('@/assets/images/avatar.png')}
+                  source={{uri: IMAGE_URL + currentUser?.avatar}}
                   defaultSource={require('@/assets/images/avatar.png')}
                   style={styles.avatar}
                 />
@@ -286,7 +262,7 @@ export default function SettingScreen() {
         >
           <View style={styles.modalImageContainer}>
             <Image
-              source={require('@/assets/images/avatar.png')}
+             source={{uri: IMAGE_URL + currentUser?.avatar}}
               style={styles.zoomedAvatar}
               resizeMode="cover"
             />

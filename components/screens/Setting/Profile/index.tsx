@@ -13,51 +13,44 @@ import {
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '@/stores';
+import { AppDispatch, RootState } from '@/stores';
 import CustomHeader from '@/components/ui/CustomHeader';
 import * as ImagePicker from 'expo-image-picker';
 import styles from './Profile.style';
+import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
+import env from '@/constants/envConstant';
+import { authAction } from '@/stores/authStore/authReducer';
+const {IMAGE_URL} = env
 
 export default function ProfileScreen() {
   const router = useRouter();
-  const currentUser = useSelector((state: RootState) => state.authStore.currentUser);
+  const dispatch = useDispatch<AppDispatch>();
+   const {currentUser, loading} = useSelector((state: RootState) => state.authStore);
   
   const [avatar, setAvatar] = useState(currentUser?.avatar || null);
-  const [activeField, setActiveField] = useState<string | null>(null);
-  const [formData, setFormData] = useState({
-    fullName: currentUser?.userName || '',
-    email: currentUser?.email || '',
-    phone: currentUser?.phoneNumber || '',
-  });
-
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
+      base64: true,
     });
+    
 
     if (!result.canceled) {
       setAvatar(result.assets[0].uri);
-      // Implement avatar upload logic here
+      const base64Image = result.assets[0].base64;
+      const cleanBase64 = base64Image ? base64Image.replace(/^data:image\/[^;]+;base64,/, '') : '';
+      dispatch(authAction.updateProfile({avatar: cleanBase64}));
     }
   };
 
-  const handleFieldPress = (field: string) => {
-    setActiveField(field);
-  };
-
-  const handleSave = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    setActiveField(null);
-    // Implement save logic here
-  };
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#222" />
-      
+      <LoadingOverlayView visible={loading} text="Đang cập nhật..." />
       <CustomHeader 
         title="Thông tin cá nhân"
         showBackButton={true}
@@ -69,7 +62,7 @@ export default function ProfileScreen() {
         <View style={styles.avatarSection}>
           <TouchableOpacity onPress={pickImage} style={styles.avatarContainer}>
             {avatar ? (
-              <Image source={{ uri: avatar }} style={styles.avatar} />
+              <Image source={{ uri: IMAGE_URL + currentUser?.avatar }} style={styles.avatar} />
             ) : (
               <View style={styles.avatarPlaceholder}>
                 <FontAwesome5 name="user" size={40} color="#666" />
@@ -87,73 +80,28 @@ export default function ProfileScreen() {
           
           <TouchableOpacity 
             style={styles.infoRow}
-            onPress={() => handleFieldPress('fullName')}
+            onPress={() => router.push('/(account)/profile/editName')}
           >
             <Text style={styles.label}>Họ và tên</Text>
-            <Text style={styles.value}>{formData.fullName}</Text>
+            <Text style={styles.value}>{currentUser?.userName}</Text>
             <FontAwesome5 name="chevron-right" size={16} color="#8E8E93" />
           </TouchableOpacity>
 
           <TouchableOpacity 
             style={styles.infoRow}
-            onPress={() => handleFieldPress('email')}
           >
             <Text style={styles.label}>Email</Text>
-            <Text style={styles.value}>{formData.email}</Text>
-            <FontAwesome5 name="chevron-right" size={16} color="#8E8E93" />
+            <Text style={styles.value}>{currentUser?.email}</Text>      
           </TouchableOpacity>
 
           <TouchableOpacity 
-            style={styles.infoRow}
-            onPress={() => handleFieldPress('phone')}
+            style={styles.infoRow}         
           >
             <Text style={styles.label}>Số điện thoại</Text>
-            <Text style={styles.value}>{formData.phone}</Text>
-            <FontAwesome5 name="chevron-right" size={16} color="#8E8E93" />
+            <Text style={styles.value}>{currentUser?.phoneNumber}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
-
-      {/* Edit Modal */}
-      <Modal
-        visible={activeField !== null}
-        transparent={true}
-        animationType="slide"
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>
-              {activeField === 'fullName' ? 'Chỉnh sửa họ tên' :
-               activeField === 'email' ? 'Chỉnh sửa email' :
-               'Chỉnh sửa số điện thoại'}
-            </Text>
-            
-            <TextInput
-              style={styles.modalInput}
-              value={formData[activeField as keyof typeof formData]}
-              onChangeText={(text) => setFormData(prev => ({ ...prev, [activeField as string]: text }))}
-              keyboardType={activeField === 'email' ? 'email-address' : 
-                          activeField === 'phone' ? 'phone-pad' : 'default'}
-            />
-
-            <View style={styles.modalButtons}>
-              <TouchableOpacity 
-                style={[styles.modalButton, styles.cancelButton]}
-                onPress={() => setActiveField(null)}
-              >
-                <Text style={styles.modalButtonText}>Hủy</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity 
-                style={[styles.modalButton, styles.saveButton]}
-                onPress={() => handleSave(activeField as string, formData[activeField as keyof typeof formData])}
-              >
-                <Text style={styles.modalButtonText}>Lưu</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
     </SafeAreaView>
   );
 }

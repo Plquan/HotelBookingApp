@@ -1,17 +1,17 @@
 import { Stack } from 'expo-router';
 
-export default function Layout() {
+export default function ProfileLayout() {
   return (
     <Stack>
         <Stack.Screen
-        name="profile"
+        name="index"
        
         options={{
           headerShown: false,
         }}
       />
-         <Stack.Screen
-        name="changePassword"
+        <Stack.Screen
+        name="editName"
        
         options={{
           headerShown: false,

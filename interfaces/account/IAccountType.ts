@@ -1,6 +1,6 @@
 export interface IUpdateProfileData {
     userName?: string | null;
-    avatar?: string;
+    avatar?: string | null;
 }
 
 export interface IChangePasswordData {
