@@ -51,12 +51,13 @@ export const styles = StyleSheet.create({
   },
   listContainer: {
     paddingHorizontal: 10,
-    paddingBottom: 20,
+    paddingBottom: 90,
   },
   hotelItem: {
     marginBottom: 5,
     backgroundColor: '#222',
     padding: 10,
+
   },
   hotelItemContent: {
     flexDirection: 'row',

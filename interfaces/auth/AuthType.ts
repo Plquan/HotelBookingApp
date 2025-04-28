@@ -3,5 +3,6 @@ export interface ICurrentUser {
   userName?: string;
   email?: string;
   phoneNumber?: string;
+  avatar?: string;
   roles?: string[];
 }

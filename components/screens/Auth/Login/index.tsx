@@ -48,11 +48,6 @@ export default function LoginScreen() {
       }
       const res = await authSevices.login(params);
        if(res.isSuccess){
-        Toast.show({
-          type: 'success',
-          text1:  'Đăng nhập thành công',
-          position: 'top'
-        });
         await AsyncStorage.setItem("accessToken", res.data?.accessToken || '');
         dispatch(authAction.getCurrentUser())
         router.back()
