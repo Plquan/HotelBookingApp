@@ -16,11 +16,14 @@ import { RootState, AppDispatch } from '@/stores';
 import CustomHeader from '@/components/ui/CustomHeader';
 import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
 import Toast from 'react-native-toast-message';
-import styles from './EditName.style';
 import CustomButton from '@/components/ui/Button';
 import { authAction } from '@/stores/authStore/authReducer';
+import { createStyles } from './EditName.style';
+import { useTheme } from '@/providers/ThemeContext';
 
 export default function EditUsernameScreen() {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const {currentUser, loading} = useSelector((state: RootState) => state.authStore);

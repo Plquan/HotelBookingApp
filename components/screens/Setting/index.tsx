@@ -9,8 +9,8 @@ import {
   Modal,
   Alert,
   StatusBar,
+  Switch
 } from 'react-native';
-import MainLayout from '@/components/Layouts/MainLayout';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useSelector, useDispatch } from 'react-redux';
@@ -21,12 +21,13 @@ import { authAction } from '@/stores/authStore/authReducer';
 import CustomButton from '@/components/ui/Button';
 import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
 import  env from '@/constants/envConstant';
-const {IMAGE_URL} = env
-
-// Import styles từ file riêng
-import styles from '@/components/screens/Setting/Setting.style';
+import { useTheme } from '@/providers/ThemeContext';
+import { createStyles } from './Setting.style';
+const {IMAGE_URL} = env;
 
 export default function SettingScreen() {
+  const { theme, toggleTheme,themeMode } = useTheme();
+  const styles = createStyles(theme);
   const router = useRouter();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
@@ -81,7 +82,6 @@ export default function SettingScreen() {
 
   if (!isAuthenticated) {
     return (
-      <MainLayout>
         <SafeAreaView style={styles.safeArea}>
           <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.loginWrapper}>
@@ -99,9 +99,10 @@ export default function SettingScreen() {
                 <Text style={styles.loginButtonText}>Đăng nhập</Text>
               </TouchableOpacity>
             </View>
+
+            
           </ScrollView>
         </SafeAreaView>
-      </MainLayout>
     );
   }
 
@@ -133,14 +134,7 @@ export default function SettingScreen() {
               </Text>
             </View>
           </View>
-          <View style={styles.headerIcons}>
-            <TouchableOpacity style={styles.iconButton}>
-              <FontAwesome5 name="comment" size={22} color="#fff" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButton}>
-              <FontAwesome5 name="bell" size={22} color="#fff" />
-            </TouchableOpacity>
-          </View>
+  
         </View>
       </View>
 
@@ -222,21 +216,26 @@ export default function SettingScreen() {
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.settingRow, styles.lastSettingRow]}>
+            <View style={[styles.settingRow, styles.lastSettingRow]}>
               <View style={styles.settingIconContainer}>
-                <FontAwesome5 name="sun" size={20} color="#B58E50" />
-              </View>
-              <Text style={styles.settingText}>Giao diện</Text>
-              <View style={styles.settingValueContainer}>
-                <Text style={styles.settingValue}>Tối</Text>
-                <FontAwesome5
-                  name="chevron-right"
-                  size={16}
-                  color="#8E8E93"
-                  style={styles.rowArrow}
+                <FontAwesome5 
+                  name={themeMode ? "moon" : "sun"} 
+                  size={20} 
+                  color="#B58E50" 
                 />
               </View>
-            </TouchableOpacity>
+              <Text style={styles.settingText}>Chế độ tối</Text>
+              <View style={styles.settingValueContainer}>
+                <Switch
+                  trackColor={{ false: "#767577", true: "#B58E50" }}
+                  thumbColor={theme ? "#fff" : "#f4f3f4"}
+                  ios_backgroundColor="#3e3e3e"
+                  onValueChange={toggleTheme}
+                  value={themeMode}
+                  style={{ transform: [{ scaleX: .8 }, { scaleY: .8 }] }}
+                />
+              </View>
+            </View>
           </View>
         </View>
 

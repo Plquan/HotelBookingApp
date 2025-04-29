@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native';
+import { Theme } from '@/providers/ThemeContext';
 
-export default StyleSheet.create({
+export const createStyles = (theme: Theme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#222',
+    backgroundColor: theme.content,
   },
   content: {
     flex: 1,
@@ -23,13 +24,13 @@ export default StyleSheet.create({
   passwordInput: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#333',
+    backgroundColor: theme.background,
     borderRadius: 8,
     paddingHorizontal: 12,
   },
   input: {
     flex: 1,
-    color: '#fff',
+    color: theme.text,
     fontSize: 16,
     paddingVertical: 12,
   },

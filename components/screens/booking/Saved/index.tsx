@@ -18,8 +18,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import SaveRoom from '@/components/ui/SavedIcon';
 import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
 import CustomHeader from '@/components/ui/CustomHeader';
-
+import { useTheme } from '@/providers/ThemeContext';
+import { createStyles } from './SavedScreen.style';
 export default function SavedScreen() {
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
     const dispatch = useDispatch<AppDispatch>();
     const {savedRoom, loading} = useSelector(
         (state: RootState) => state.roomTypeStore
@@ -114,111 +117,3 @@ export default function SavedScreen() {
     );
 }
 
-const styles = StyleSheet.create({
-    safeArea: {
-        flex: 1,
-        backgroundColor: '#333',
-    },
-    content: {
-        flex: 1,
-        backgroundColor: '#222',
-        paddingTop: 20,
-        paddingBottom: 20,
-    },
-    hotelItem: {
-        backgroundColor: '#333',
-        borderRadius: 12,
-        marginHorizontal: 16,
-        marginBottom: 16,
-        overflow: 'hidden',
-    },
-    hotelItemContent: {
-        flexDirection: 'row',
-        padding: 12,
-    },
-    hotelImageContainer: {
-        width: 120,
-        height: 100,
-        borderRadius: 8,
-        overflow: 'hidden',
-        marginRight: 12,
-    },
-    hotelImage: {
-        width: '100%',
-        height: '100%',
-    },
-    hotelInfo: {
-        flex: 1,
-        paddingRight: 8,
-    },
-    hotelName: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: 'white',
-        marginBottom: 8,
-        paddingRight: 24,
-    },
-    ratingContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 8,
-    },
-    ratingBox: {
-        backgroundColor: '#0066cc',
-        paddingHorizontal: 8,
-        paddingVertical: 4,
-        borderRadius: 4,
-    },
-    ratingScore: {
-        color: 'white',
-        fontSize: 14,
-        fontWeight: 'bold',
-    },
-    locationContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 4,
-    },
-    locationText: {
-        color: '#666',
-        fontSize: 14,
-        marginLeft: 4,
-    },
-    divider: {
-        height: 1,
-        backgroundColor: '#444',
-        marginHorizontal: 12,
-    },
-    favoriteButton: {
-        position: 'absolute',
-        top: 8,
-        right: 8,
-        zIndex: 1,
-    },
-    emptyContainer: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 40,
-    },
-    emptyText: {
-        color: '#666',
-        fontSize: 16,
-        marginTop: 16,
-        marginBottom: 24,
-    },
-    browseButton: {
-        backgroundColor: '#b58e50',
-        paddingHorizontal: 24,
-        paddingVertical: 12,
-        borderRadius: 8,
-    },
-    browseButtonText: {
-        color: 'white',
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
-    listContent: {
-        flexGrow: 1,
-    },
-});

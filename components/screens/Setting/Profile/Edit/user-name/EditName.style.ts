@@ -1,14 +1,15 @@
 import { StyleSheet } from 'react-native';
+import { Theme } from '@/providers/ThemeContext';
 
-export default StyleSheet.create({
+export const createStyles = (theme: Theme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#333',
+    backgroundColor: theme.background,
   },
   content: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#222',
+    backgroundColor: theme.content,
   },
   formGroup: {
     marginBottom: 20,
@@ -23,16 +24,16 @@ export default StyleSheet.create({
     color: '#ff4444',
   },
   textboxContainer: {
-    backgroundColor: '#333',
+    backgroundColor: theme.background,
     borderRadius: 8,
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#444',
+    borderColor: theme.borderInput,
   },
   textbox: {
     flex: 1,
-    color: '#fff',
+    color: theme.text,
     fontSize: 16,
     padding: 12,
     paddingRight: 40,
@@ -57,10 +58,10 @@ export default StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#333',
+    backgroundColor: theme.background,
     paddingVertical: 10,
     paddingHorizontal: 16,
     borderTopWidth: 1,
-    borderTopColor: '#444',
+    borderTopColor: theme.borderInput,
   },
 });

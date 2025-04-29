@@ -11,12 +11,15 @@ import {
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import CustomHeader from '@/components/ui/CustomHeader';
-import styles from './ChangePassword.style';
 import accountServices from '@/services/accountServices';
 import { IChangePasswordData } from '@/interfaces/account/IAccountType';
 import Toast from 'react-native-toast-message';
 import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
+import { createStyles } from './ChangePassword.style';
+import { useTheme } from '@/providers/ThemeContext';
 export default function ChangePasswordScreen() {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
   const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({

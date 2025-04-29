@@ -14,7 +14,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/stores/index';
 import bookingServices from '@/services/bookingServices';
 import env from '@/constants/envConstant';
-import { styles } from './CheckRoom.style';
 import { IChooseRoom } from '@/interfaces/booking/IBookingType';
 import Toast from 'react-native-toast-message';
 import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
@@ -24,10 +23,14 @@ import { bookingAction } from '@/stores/bookingStore/bookingReducer';
 import { ICheckRoomData } from "@/interfaces/booking/IBookingType";
 import { ISelectedRoom } from '@/interfaces/booking/IBookingType';
 import { differenceInDays } from 'date-fns';
-import roomServices from '@/services/roomService';
 import SaveRoom from '@/components/ui/SavedIcon';
+import { useTheme } from '@/providers/ThemeContext';
+import { createStyles } from './CheckRoom.style';
+import SelectInput from '@/components/ui/SelectInput';
 
 export default function CheckRoomScreen() {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
   const bookingData = useSelector((state: RootState) => state.bookingStore.bookingData);
 
   const [fromDate, setFromDate] = useState(() => new Date(bookingData.fromDate));
@@ -176,25 +179,15 @@ export default function CheckRoomScreen() {
             </View>
 
             <View style={styles.priceQuantityContainer}>
-              <View style={styles.quantityControl}>
-                <TouchableOpacity
-                  style={styles.quantityButton}
-                  onPress={() => handleQuantityChange(item.id, -1,item.price, item.availableRooms)}
-                >
-                  <Text style={styles.quantityButtonText}>-</Text>
-                </TouchableOpacity>
-
-                <Text style={styles.quantityText}>
-                  {chooseRoom.find(room => room.roomTypeId === item.id)?.number || 0}
-                </Text>
-
-                <TouchableOpacity
-                  style={styles.quantityButton}
-                  onPress={() => handleQuantityChange(item.id, 1,item.price, item.availableRooms)}
-                >
-                  <Text style={styles.quantityButtonText}>+</Text>
-                </TouchableOpacity>
-              </View>         
+              <SelectInput
+                value={chooseRoom.find(room => room.roomTypeId === item.id)?.number || 0}
+                maxValue={item.availableRooms}
+                onValueChange={(value) => {
+                  const currentValue = chooseRoom.find(room => room.roomTypeId === item.id)?.number || 0;
+                  const change = value - currentValue;
+                  handleQuantityChange(item.id, change, item.price, item.availableRooms);
+                }}
+              />
             </View>
           </View>
         </View>
@@ -212,7 +205,7 @@ export default function CheckRoomScreen() {
         <View style={styles.headerContent}>
           <View style={styles.headerLeft}>
             <TouchableOpacity onPress={handleBack}>
-              <Ionicons name="chevron-back" size={24} color="white" />
+              <Ionicons name="chevron-back" size={24} style={styles.iconColor} />
             </TouchableOpacity>
             <Text style={styles.headerTitle}>Phòng trống hiện tại</Text>
           </View>

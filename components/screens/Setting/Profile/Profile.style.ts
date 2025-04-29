@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native';
+import { Theme } from '@/providers/ThemeContext';
 
-export default StyleSheet.create({
+export const createStyles = (theme: Theme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#222',
+    backgroundColor: theme.background,
   },
   content: {
     flex: 1,
@@ -46,7 +47,7 @@ export default StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#fff',
+    color: theme.text,
     marginBottom: 16,
   },
   infoRow: {
@@ -54,7 +55,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#333',
+    borderBottomColor: theme.borderInput,
   },
   label: {
     flex: 1,
@@ -64,7 +65,7 @@ export default StyleSheet.create({
   value: {
     flex: 2,
     fontSize: 16,
-    color: '#fff',
+    color: theme.text,
     marginRight: 8,
   },
 

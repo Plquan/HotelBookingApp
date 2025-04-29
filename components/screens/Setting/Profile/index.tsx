@@ -16,13 +16,16 @@ import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '@/stores';
 import CustomHeader from '@/components/ui/CustomHeader';
 import * as ImagePicker from 'expo-image-picker';
-import styles from './Profile.style';
 import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
 import env from '@/constants/envConstant';
 import { authAction } from '@/stores/authStore/authReducer';
 const {IMAGE_URL} = env
+import {createStyles} from './Profile.style';
+import { useTheme } from '@/providers/ThemeContext';
 
 export default function ProfileScreen() {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
    const {currentUser, loading} = useSelector((state: RootState) => state.authStore);

@@ -8,7 +8,6 @@ import {
   ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { styles } from './BookedScreen.style';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { bookingAction } from '@/stores/bookingStore/bookingReducer';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,6 +19,8 @@ import { socketService } from '@/services/socketService';
 import Toast from 'react-native-toast-message';
 import { getStatusInfo } from '@/constants/Status';
 import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
+import { createStyles } from './BookedScreen.style';
+import { useTheme } from '@/providers/ThemeContext';
 
 const formatDateToVietnamese = (date: Date) => {
   const day = date.getDate();
@@ -29,6 +30,8 @@ const formatDateToVietnamese = (date: Date) => {
 };
 
 const BookedScreen = () => {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
   const [activeTab, setActiveTab] = useState('active');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<IBookedData>();

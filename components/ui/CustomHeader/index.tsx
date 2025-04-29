@@ -3,11 +3,11 @@ import {
   View,
   Text,
   TouchableOpacity,
-  StyleSheet,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-
+import { createStyles } from './CustomHeader.style';
+import { useTheme } from '@/providers/ThemeContext';
 interface CustomHeaderProps {
   title: string;
   showBackButton?: boolean;
@@ -29,6 +29,8 @@ const CustomHeader = ({
       router.back();
     }
   };
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   return (
     <View style={styles.header}>
@@ -36,7 +38,7 @@ const CustomHeader = ({
       <View style={styles.leftContainer}>
         {showBackButton ? (
           <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-            <Ionicons name="chevron-back" size={24} color="white" />
+            <Ionicons name="chevron-back" size={24} style={styles.backButtonColor} />
           </TouchableOpacity>
         ) : (
           <View style={styles.emptyButton} />
@@ -56,37 +58,5 @@ const CustomHeader = ({
   );
 };
 
-const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-  },
-  leftContainer: {
-    flex: 1,
-    alignItems: 'flex-start',
-  },
-  titleContainer: {
-    flex: 2,
-    alignItems: 'center',
-  },
-  rightContainer: {
-    flex: 1,
-    alignItems: 'flex-end',
-  },
-  backButton: {
-    padding: 5,
-  },
-  emptyButton: {
-    width: 34,
-    height: 34,
-  },
-  headerTitle: {
-    color: 'white',
-    fontSize: 15,
-    fontWeight: 'bold',
-  },
-});
 
 export default CustomHeader;

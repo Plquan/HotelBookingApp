@@ -1,12 +1,13 @@
 import { StyleSheet } from 'react-native';
+import { Theme } from '@/providers/ThemeContext';
 
-export const styles = StyleSheet.create({
+export const createStyles = (theme: Theme) => StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#222',
+    backgroundColor: theme.content,
   },
   header: {
-    backgroundColor: '#333',
+    backgroundColor: theme.background,
     padding: 15,
     borderColor: '#b58e50',
     borderWidth: 2,
@@ -22,13 +23,13 @@ export const styles = StyleSheet.create({
     marginBottom: 5,
   },
   headerTitle: {
-    color: 'white',
+    color: theme.text,
     fontSize: 18,
     fontWeight: 'bold',
     marginLeft: 10,
   },
   headerDates: {
-    color: 'white',
+    color: theme.text,
     fontSize: 16,
     marginLeft: 34,
   },
@@ -37,15 +38,15 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-around',
     padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#444',
+    borderBottomColor: theme.borderInput,
   },
   filterText: {
-    color: 'white',
+    color: theme.text,
     marginLeft: 5,
     fontSize: 16,
   },
   totalCount: {
-    color: 'white',
+    color: theme.text,
     padding: 15,
     fontSize: 16,
   },
@@ -55,7 +56,7 @@ export const styles = StyleSheet.create({
   },
   hotelItem: {
     marginBottom: 5,
-    backgroundColor: '#222',
+    backgroundColor: theme.content,
     padding: 10,
 
   },
@@ -86,13 +87,13 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   hotelName: {
-    color: 'white',
+    color: theme.text,
     fontSize: 16,
     fontWeight: 'bold',
     paddingRight: 30,
   },
   hostedByText: {
-    color: '#999',
+    color:theme.text,
     fontSize: 12,
     marginTop: 2,
   },
@@ -123,7 +124,7 @@ export const styles = StyleSheet.create({
     marginTop: 4,
   },
   locationText: {
-    color: '#ccc',
+    color: theme.text,
     marginLeft: 4,
     fontSize: 12,
   },
@@ -133,9 +134,6 @@ export const styles = StyleSheet.create({
     fontSize: 12,
   },
   priceQuantityContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
     marginTop: 8,
   },
   priceContainer: {
@@ -144,31 +142,6 @@ export const styles = StyleSheet.create({
   priceText: {
     color: 'white',
     fontSize: 18,
-    fontWeight: 'bold',
-  },
-  quantityControl: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#333',
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#b58e50',
-  },
-  quantityButton: {
-    width: 30,
-    height: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  quantityButtonText: {
-    color: '#b58e50',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  quantityText: {
-    color: 'white',
-    fontSize: 16,
-    paddingHorizontal: 10,
     fontWeight: 'bold',
   },
   feesText: {
@@ -181,7 +154,7 @@ export const styles = StyleSheet.create({
   },
   divider: {
     height: 1,
-    backgroundColor: '#444',
+    backgroundColor: theme.borderInput,
     marginTop: 10,
   },
   modalContainer: {
@@ -282,15 +255,18 @@ export const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#333',
+    backgroundColor: theme.background,
     paddingVertical: 10,
     paddingHorizontal: 16,
     borderTopWidth: 1,
-    borderTopColor: '#444',
+    borderTopColor: theme.borderInput,
   },
   bookingButtonText: {
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
   },
+  iconColor: {
+    color: theme.text,
+  }
 });
