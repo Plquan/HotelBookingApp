@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ICurrentUser } from "@/interfaces/auth/AuthType";
-import {getAccessToken} from "@/utils/functions/accessToken";
+import {getAccessToken,removeAccessToken} from "@/utils/functions/accessToken";
 import { authThunks } from "./authThunk";
 import Toast from "react-native-toast-message";
 export interface AuthState {
@@ -28,6 +28,7 @@ export interface AuthState {
             state.token = null;
             state.isAuthenticated = false;
             state.currentUser = null;
+            removeAccessToken();
         },
         updateCurrentUser: (state, action) => {
             state.currentUser = action.payload;

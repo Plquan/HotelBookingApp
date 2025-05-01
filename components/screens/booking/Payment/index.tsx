@@ -24,8 +24,10 @@ import { useTheme } from '@/providers/ThemeContext';
 import { createStyles } from './PaymentScreen.style';
 import env from '@/constants/envConstant';
 const { IMAGE_URL } = env;
+import { useTranslate } from '@/hooks/useTranslate';
 
 export default function PaymentScreen() {
+  const t = useTranslate();
   const { theme } = useTheme();
   const styles = createStyles(theme);
   const router = useRouter();
@@ -122,15 +124,15 @@ export default function PaymentScreen() {
       
       {/* Using the new CustomHeader component */}
       <CustomHeader
-        title="Thông tin thanh toán"
+        title={t("00088")}
         showBackButton={true}
         onBackPress={handleBack}
       />
 
       <ScrollView style={styles.container}>
         <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Thanh toán</Text>
-          <Text style={styles.sectionSubtitle}>Chọn phương thức thanh toán</Text>
+          <Text style={styles.sectionTitle}>{t("00089")}</Text>
+          <Text style={styles.sectionSubtitle}>{t("00090")}</Text>
 
           <TouchableOpacity
             style={[
@@ -153,7 +155,7 @@ export default function PaymentScreen() {
               <View style={styles.paymentMethodIcon}>
                 <Ionicons name="wallet-outline" size={24} color="#b58e50" />
               </View>
-              <Text style={styles.paymentMethodText}>Thanh toán tại nơi</Text>
+              <Text style={styles.paymentMethodText}>{t("00091")}</Text>
             </View>
           </TouchableOpacity>
 
@@ -185,7 +187,7 @@ export default function PaymentScreen() {
         </View>
 
         <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Phòng đã chọn</Text>
+          <Text style={styles.sectionTitle}>{t("00092")}</Text>
           <View style={styles.dateInfoContainer}>
             <Ionicons name="calendar-outline" size={16} color={theme.text} />
             <Text style={styles.dateInfoText}>
@@ -205,16 +207,16 @@ export default function PaymentScreen() {
                   <View style={styles.roomMetrics}>
                     <View style={styles.roomMetricItem}>
                       <Ionicons name="people-outline" size={16} color={theme.text} />
-                      <Text style={styles.metricText}>{bookingData.totalPerson} khách</Text>
+                      <Text style={styles.metricText}>{bookingData.totalPerson} {t("00093")}</Text>
                     </View>
                     <View style={styles.roomMetricItem}>
                       <Ionicons name="bed-outline" size={16} color={theme.text} />
-                      <Text style={styles.metricText}>{room.count} phòng</Text>
+                      <Text style={styles.metricText}>{room.count} {t("00094")}</Text>
                     </View>
                   </View>
                 </View>
                 <View style={styles.priceContainer}>
-                  <Text style={styles.priceLabel}>Tổng tiền</Text>
+                  <Text style={styles.priceLabel}>{t("00095")}</Text>
                   <Text style={styles.priceText}>
                     {room.totalPrice.toLocaleString('vi-VN') + " VND"}
                   </Text>
@@ -226,7 +228,7 @@ export default function PaymentScreen() {
 
         {/* Terms and Conditions */}
         <View style={styles.termsContainer}>
-          <Text style={styles.termsTitle}>Điều kiện đặt phòng</Text>
+          <Text style={styles.termsTitle}>{t("00096")}</Text>
           
           <View style={styles.termItem}>
             <Ionicons name="checkmark" size={18} style={styles.checkMarkColor} />
@@ -249,13 +251,13 @@ export default function PaymentScreen() {
       <View style={styles.bookingButtonWrapper}>
           <View style={styles.priceSection}>
             <View style={styles.priceHeader}>
-              <Text style={styles.discountedPrice}>Tổng tiền: {' '}
+              <Text style={styles.discountedPrice}>{t("00095")}: {' '}
                 {calculateTotalPrice().toLocaleString('vi-VN') +" VND"}</Text>
             </View>
-            <Text style={styles.taxInfo}>Đã bao gồm thuế và phí</Text>
+            <Text style={styles.taxInfo}>{t("00086")}</Text>
           </View>
           <CustomButton
-            title="Bước tiếp theo"
+            title={t("00097")}
             onPress={handleBookNow}
             style={styles.bookingButton}
           />

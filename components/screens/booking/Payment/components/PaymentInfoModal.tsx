@@ -16,6 +16,7 @@ import { RootState } from '@/stores';
 import { router } from 'expo-router';
 import { useTheme } from '@/providers/ThemeContext';
 import { createStyles } from './PaymentInfoModal.style';
+import { useTranslate } from '@/hooks/useTranslate';
 
 
 const formatDateToVietnamese = (date: Date) => {
@@ -36,6 +37,7 @@ interface BookingConfirmationModalProps {
 }
 
 export default function BookingConfirmationModal({ visible, onClose, bookingCode }: BookingConfirmationModalProps) {
+  const t = useTranslate();
   const selectedRooms = useSelector((state: RootState) => state.bookingStore.selectedRoom);
   const bookingData = useSelector((state: RootState) => state.bookingStore.bookingData);
   const { theme } = useTheme();
@@ -62,7 +64,7 @@ export default function BookingConfirmationModal({ visible, onClose, bookingCode
             <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
               <Ionicons name="close" size={24} color={useTheme().theme.text} />
             </TouchableOpacity>
-            <Text style={styles.headerTitle}>Xác nhận đặt phòng</Text>
+            <Text style={styles.headerTitle}>{t("00098")}</Text>
             <TouchableOpacity style={styles.helpButton}>
               <Ionicons name="help-circle-outline" size={24} color={useTheme().theme.text} />
             </TouchableOpacity>
@@ -71,12 +73,12 @@ export default function BookingConfirmationModal({ visible, onClose, bookingCode
           <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
             {/* Confirmation Status */}
             <View style={styles.confirmationContainer}>
-              <Text style={styles.confirmationStatus}>Đã xác nhận</Text>
-              <Text style={styles.confirmationTitle}>Đặt phòng của bạn</Text>
+              <Text style={styles.confirmationStatus}>{t("00103")}</Text>
+              <Text style={styles.confirmationTitle}>{t("00099")}</Text>
               
               <View style={styles.codeContainer}>
                 <View style={styles.codeRow}>
-                  <Text style={styles.codeLabel}>Mã đơn:</Text>
+                  <Text style={styles.codeLabel}>{t("00100")}:</Text>
                   <Text style={styles.codeValue}>{bookingCode}</Text>
                   <TouchableOpacity style={styles.copyButton}>
                     <Ionicons name="copy-outline" size={20} color="#b58e50" />
@@ -88,7 +90,7 @@ export default function BookingConfirmationModal({ visible, onClose, bookingCode
 
             {/* Room List Section */}
             <View style={styles.roomsContainer}>
-              <Text style={styles.sectionTitle}>Danh sách phòng đã đặt</Text>
+              <Text style={styles.sectionTitle}>{t("00101")}</Text>
               
               {/* Time Information */}
               <View style={styles.timeContainer}>
@@ -108,17 +110,17 @@ export default function BookingConfirmationModal({ visible, onClose, bookingCode
                   />
                   <View style={styles.roomInfo}>
                     <Text style={styles.roomName}>{room.name}</Text>
-                    <Text style={styles.roomPrice}>Tổng tiền: 
+                    <Text style={styles.roomPrice}>{t("00095")}: 
                       {room.totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
                     </Text>
-                    <Text style={styles.roomQuantity}>Số lượng: {room.count} phòng</Text>
+                    <Text style={styles.roomQuantity}>{t("00102")}: {room.count} {t("00094")}</Text>
                   </View>
                 </View>
               ))}
 
               {/* Total Price Summary */}
               <View style={styles.totalPriceContainer}>
-                <Text style={styles.totalPriceLabel}>Tổng tiền:</Text>
+                <Text style={styles.totalPriceLabel}>{t("00095")}:</Text>
                 <Text style={styles.totalPriceValue}>
                   {calculateTotalPrice(selectedRooms).toLocaleString('vi-VN', { 
                     style: 'currency', 

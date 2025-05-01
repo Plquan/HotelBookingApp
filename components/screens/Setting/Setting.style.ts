@@ -209,11 +209,6 @@ export const createStyles = (theme: Theme) => StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  settingValue: {
-    color: '#8E8E93',
-    marginRight: 8,
-    fontSize: 14,
-  },
   modalImageContainer: {
     width: 280,
     height: 280,

@@ -21,6 +21,7 @@ import { getStatusInfo } from '@/constants/Status';
 import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
 import { createStyles } from './BookedScreen.style';
 import { useTheme } from '@/providers/ThemeContext';
+import { useTranslate } from '@/hooks/useTranslate';
 
 const formatDateToVietnamese = (date: Date) => {
   const day = date.getDate();
@@ -30,6 +31,7 @@ const formatDateToVietnamese = (date: Date) => {
 };
 
 const BookedScreen = () => {
+  const t = useTranslate();
   const { theme } = useTheme();
   const styles = createStyles(theme);
   const [activeTab, setActiveTab] = useState('active');
@@ -109,7 +111,7 @@ const BookedScreen = () => {
       
       {/* HEADER */}
       <CustomHeader 
-                title="Chuyến đi" 
+                title={t("00040")}
                 showBackButton={false}
             />
       
@@ -119,7 +121,7 @@ const BookedScreen = () => {
           onPress={() => handleTabPress('active')}
         >
           <Text style={activeTab === 'active' ? styles.activeTabText : styles.tabText}>
-            Đang hoạt động
+            {t("00041")}
           </Text>
         </TouchableOpacity>
         
@@ -128,7 +130,7 @@ const BookedScreen = () => {
           onPress={() => handleTabPress('past')}
         >
           <Text style={activeTab === 'past' ? styles.activeTabText : styles.tabText}>
-            Đã qua
+          {t("00042")}
           </Text>
         </TouchableOpacity>
         
@@ -137,14 +139,14 @@ const BookedScreen = () => {
           onPress={() => handleTabPress('cancelled')}
         >
           <Text style={activeTab === 'cancelled' ? styles.activeTabText : styles.tabText}>
-            Đã hủy
+          {t("00043")}
           </Text>
         </TouchableOpacity>
       </View>
       
       <ScrollView style={styles.content}>
         {filteredRooms.map((room) => {
-          const { label, color, backgroundColor } = getStatusInfo(room.status || '');
+          const { label, color, backgroundColor } = getStatusInfo(room.status || '', t);
           return (
             <TouchableOpacity 
               style={styles.tripCard} 

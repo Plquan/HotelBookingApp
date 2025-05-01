@@ -25,8 +25,10 @@ import BackButton from '@/components/ui/ButtonBack';
 import { useTheme } from '@/providers/ThemeContext';
 import { createStyles } from './Register.style';
 import CustomHeader from '@/components/ui/CustomHeader';
+import { useTranslate } from '@/hooks/useTranslate';
 
 export default function RegisterScreen() {
+  const t = useTranslate();
   const { theme } = useTheme();
   const styles = createStyles(theme);
   const [userName, setUserName] = useState('');
@@ -117,7 +119,7 @@ export default function RegisterScreen() {
 
   const handleVerifyCode = async () => {
     if (verificationCode.length !== 4) {
-      setErrorMessage('Vui lòng nhập đủ 4 chữ số');
+      setErrorMessage(t("00016"));
       return;
     }
     try {
@@ -139,7 +141,7 @@ export default function RegisterScreen() {
         });
         router.navigate('login'); 
       } else {
-        setErrorMessage('Mã xác thực không đúng');
+        setErrorMessage(t("00017"));
       }
     } catch (error) {
       console.log(error);
@@ -191,7 +193,7 @@ export default function RegisterScreen() {
           
 
           <CustomHeader 
-                title="Đăng kí tài khoản" 
+                title={t("00002")} 
                 showBackButton={true}
             />
 
@@ -209,7 +211,7 @@ export default function RegisterScreen() {
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
-                placeholder="Tên đăng nhập"
+                placeholder={t("00006")} 
                 placeholderTextColor="#888"
                 keyboardType="default"
                 autoCapitalize="none"
@@ -233,7 +235,7 @@ export default function RegisterScreen() {
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
-                placeholder="Số điện thoại"
+                placeholder={t("00007")} 
                 placeholderTextColor="#888"
                 keyboardType="numeric"
                 autoCapitalize="none"
@@ -245,7 +247,7 @@ export default function RegisterScreen() {
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
-                placeholder="Mật khẩu"
+                placeholder={t("00008")} 
                 placeholderTextColor="#888"
                 secureTextEntry={!showPassword}
                 value={password}
@@ -266,7 +268,7 @@ export default function RegisterScreen() {
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
-                placeholder="Nhập lại mật khẩu"
+                placeholder={t("00009")} 
                 placeholderTextColor="#888"
                 secureTextEntry={!showPassword}
                 value={confirmPassWord}
@@ -285,7 +287,7 @@ export default function RegisterScreen() {
             </View>
 
             <CustomButton
-              title="Tạo tài khoản"
+              title={t("00002")} 
               onPress={handleRegister}
               style={styles.registerButton}
             />

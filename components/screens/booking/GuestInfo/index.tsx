@@ -22,8 +22,10 @@ import { bookingAction } from '@/stores/bookingStore/bookingReducer';
 import { useTheme } from '@/providers/ThemeContext';
 import { createStyles } from './GuestInfo.style';
 import CustomHeader from '@/components/ui/CustomHeader';
+import { useTranslate } from '@/hooks/useTranslate';
 
 const GuestInfoScreen = () => {
+  const t = useTranslate();
   const { theme } = useTheme();
   const styles = createStyles(theme);
   const currentUser = useSelector(
@@ -85,7 +87,7 @@ const GuestInfoScreen = () => {
         <StatusBar barStyle="light-content" backgroundColor="#333" />
         
         <CustomHeader 
-                title="Thông tin cá nhân" 
+                title= {t("00080")}
                 showBackButton={true}
             />
         
@@ -103,7 +105,7 @@ const GuestInfoScreen = () => {
 
           <View style={styles.formGroup}>
             <Text style={styles.label}>
-              Họ tên
+            {t("00081")}
               <Text style={styles.required}> *</Text>
             </Text>
             <View style={styles.inputContainer}>
@@ -111,7 +113,7 @@ const GuestInfoScreen = () => {
                 style={styles.input}
                 value={userName}
                 onChangeText={setUserName}
-                placeholder="Họ tên"
+                placeholder= {t("00081")}
                 placeholderTextColor="#777"
               />
               {userName ? (
@@ -128,7 +130,7 @@ const GuestInfoScreen = () => {
           
           <View style={styles.formGroup}>
             <Text style={styles.label}>
-              Địa chỉ email
+            {t("00082")}
               <Text style={styles.required}> *</Text>
             </Text>
             <View style={styles.inputContainer}>
@@ -155,7 +157,7 @@ const GuestInfoScreen = () => {
           
           <View style={styles.formGroup}>
             <Text style={styles.label}>
-              Số điện thoại
+            {t("00083")}
               <Text style={styles.required}> *</Text>
             </Text>
             <View style={styles.inputContainer}>
@@ -163,7 +165,7 @@ const GuestInfoScreen = () => {
                 style={styles.input}
                 value={phoneNumber}
                 onChangeText={setPhoneNumber}
-                placeholder="Số điện thoại"
+                placeholder= {t("00083")}
                 placeholderTextColor="#777"
                 keyboardType="phone-pad"
               />
@@ -181,14 +183,14 @@ const GuestInfoScreen = () => {
           
           <View style={[styles.formGroup]}>
             <Text style={styles.label}>
-              Ghi chú
+            {t("00084")}
             </Text>
             <View style={[styles.inputContainer, { height: 110 }]}>
               <TextInput
                 style={[styles.input, { height: '100%', textAlignVertical: 'top' }]}
                 value={note}
                 onChangeText={setNote}
-                placeholder="Ghi chú"
+                placeholder={t("00084")}
                 placeholderTextColor="#777"
                 multiline
               />
@@ -199,13 +201,13 @@ const GuestInfoScreen = () => {
         <View style={styles.bookingButtonWrapper}>
           <View style={styles.priceSection}>
             <View style={styles.priceHeader}>
-              <Text style={styles.discountedPrice}>Tổng tiền: {' '}
+              <Text style={styles.discountedPrice}> {t("00085")}: {' '}
                 {calculateTotalPrice().toLocaleString('vi-VN')+" VND"}</Text>
             </View>
-            <Text style={styles.taxInfo}>Đã bao gồm thuế và phí</Text>
+            <Text style={styles.taxInfo}> {t("00086")}</Text>
           </View>
           <CustomButton
-            title="Bước tiếp theo"
+            title= {t("00087")}
             onPress={handleSubmit}
             style={styles.bookingButton}
           />

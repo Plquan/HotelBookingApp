@@ -22,7 +22,7 @@ export const createStyles = (theme: Theme) => StyleSheet.create({
     borderRadius: 8,
     padding: 12,
     marginVertical: 16,
-    backgroundColor: '#2a2a2a',
+    backgroundColor: theme.background,
   },
   loginButtonText: {
     color: '#B58E50',

@@ -4,9 +4,11 @@ import { Platform } from 'react-native';
 import { HapticTab } from '@/components/ui/Tab/HapticTab';
 import { IconSymbol } from '@/components/ui/Icon/IconSymbol';
 import { useTheme } from '@/providers/ThemeContext';
+import { useTranslate } from '@/hooks/useTranslate';
 
 export default function TabLayout() {
   const { theme, themeMode } = useTheme();
+  const t = useTranslate();
 
   return (
     <Tabs
@@ -38,14 +40,14 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tìm kiếm',
+          title: t("00108"),
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="magnifyingglass" color={color} />,
         }}
       />
      <Tabs.Screen
           name="saved"
           options={{
-            title: 'Đã lưu',
+            title: t("00109"),
             tabBarIcon: ({ color, focused }) => (
               <IconSymbol
                 size={28}
@@ -58,7 +60,7 @@ export default function TabLayout() {
        <Tabs.Screen
         name="booked"
         options={{
-          title: 'Đã đặt',
+          title: t("00110"),
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="suitcase.fill" color={color} />,
         }}
       />
@@ -66,7 +68,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="setting"
         options={{
-          title: 'Cài đặt',
+          title: t("00111"),
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="gearshape.fill" color={color} />,
         }}
       />

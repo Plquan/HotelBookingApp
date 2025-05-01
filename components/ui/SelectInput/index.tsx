@@ -3,15 +3,16 @@ import { View, Text, TouchableOpacity, StyleSheet, Modal, ScrollView, Animated, 
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useTheme } from '@/providers/ThemeContext';
 import { createStyles } from './SelectInput.style';
+import { useTranslate } from '@/hooks/useTranslate';
 
 interface SelectInputProps {
   value: number;
   maxValue: number;
   onValueChange: (value: number) => void;
-  label?: string;
 }
 
-export default function SelectInput({ value, maxValue, onValueChange, label = "phòng" }: SelectInputProps) {
+export default function SelectInput({ value, maxValue, onValueChange}: SelectInputProps) {
+  const t = useTranslate();
   const [visibleModal, setVisibleModal] = useState(false);
   const [tempValue, setTempValue] = useState(value);
   const { theme } = useTheme();
@@ -83,7 +84,7 @@ export default function SelectInput({ value, maxValue, onValueChange, label = "p
     setTempValue(newValue);
   };
   
-  const displayText = value === 0 ? "Chọn" : `${value} ${label}`;
+  const displayText = value === 0 ? t("00073") : `${value} ${t("00077")}`;
   
   // Animation styles
   const overlayStyle = {
@@ -128,7 +129,7 @@ export default function SelectInput({ value, maxValue, onValueChange, label = "p
             <TouchableWithoutFeedback onPress={e => e.stopPropagation()}>
               <Animated.View style={[styles.modalContainer, modalStyle]}>
                 <View style={styles.headerLine} />
-                <Text style={styles.modalTitle}>Chọn số lượng</Text>
+                <Text style={styles.modalTitle}>{t("00076")}</Text>
                 
                 <ScrollView
                   style={styles.valueScrollView}
@@ -144,7 +145,7 @@ export default function SelectInput({ value, maxValue, onValueChange, label = "p
                         onPress={() => handleValueChange(optionValue)}
                       >
                         <Text style={[styles.optionText, tempValue === optionValue && styles.selectedOptionText]}>
-                          {`${optionValue} ${label}`}
+                          {`${optionValue} ${t("00077")}`}
                         </Text>
                       </TouchableOpacity>
                     );
@@ -155,14 +156,14 @@ export default function SelectInput({ value, maxValue, onValueChange, label = "p
                   style={styles.deleteButton}
                   onPress={handleDelete}
                 >
-                  <Text style={styles.deleteText}>Xóa</Text>
+                  <Text style={styles.deleteText}>{t("00078")}</Text>
                 </TouchableOpacity>
                 
                 <TouchableOpacity
                   style={styles.confirmButton}
                   onPress={handleSelect}
                 >
-                  <Text style={styles.confirmText}>Chọn</Text>
+                  <Text style={styles.confirmText}>{t("00073")}</Text>
                 </TouchableOpacity>
               </Animated.View>
             </TouchableWithoutFeedback>

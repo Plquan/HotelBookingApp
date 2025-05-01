@@ -22,8 +22,10 @@ import { bookingAction } from '@/stores/bookingStore/bookingReducer';
 import CustomButton from '@/components/ui/Button';
 import { useTheme } from '@/providers/ThemeContext';
 import { createStyles } from './HomeScreen.style';
+import { useTranslate } from '@/hooks/useTranslate';
 
 export default function HomeScreen() {
+  const t = useTranslate();
   const { theme } = useTheme();
   const styles = createStyles(theme);
   const booking = useSelector((state: RootState) => state.bookingStore.bookingData);
@@ -114,8 +116,8 @@ export default function HomeScreen() {
               style={styles.bannerImage}
             >
               <View style={styles.overlay}>
-                <Text style={styles.bannerTitle}>Enjoy a Luxury Experience</Text>
-                <Text style={styles.bannerSubtitle}>HOTELS & RESORTS</Text>
+                <Text style={styles.bannerTitle}>{t("00069")}</Text>
+                <Text style={styles.bannerSubtitle}>{t("00070")}</Text>
               </View>
             </ImageBackground>
           </View>
@@ -123,7 +125,7 @@ export default function HomeScreen() {
           {/* Booking Form */}
           <View style={styles.bookingContainer}>
             <View style={styles.inputBox}>
-              <Text style={styles.label}>NGÀY ĐẾN</Text>
+              <Text style={styles.label}>{t("00064")}</Text>
               <TouchableOpacity onPress={toggleArrivalPicker} style={styles.row}>
                 <TextInput
                   style={styles.input}
@@ -152,7 +154,7 @@ export default function HomeScreen() {
             </View>
 
             <View style={styles.inputBox}>
-              <Text style={styles.label}>NGÀY ĐI</Text>
+              <Text style={styles.label}>{t("00065")}</Text>
               <TouchableOpacity onPress={toggleDeparturePicker} style={styles.row}>
                 <TextInput
                   style={styles.input}
@@ -183,7 +185,7 @@ export default function HomeScreen() {
 
             <View style={styles.countBox}>
               <View style={styles.countBoxRow}>
-                <Text style={styles.label}>KHÁCH</Text>
+                <Text style={styles.label}>{t("00066")}</Text>
                 <View style={styles.countControls}>
                   <TouchableOpacity 
                     style={styles.countButton} 
@@ -205,7 +207,7 @@ export default function HomeScreen() {
             </View>
             
             <CustomButton
-              title="Tìm phòng"
+              title={t("00068")}
               onPress={handleCheckRoom}
               style={styles.button}
             />
@@ -213,7 +215,7 @@ export default function HomeScreen() {
 
           {/* LAST MINUTE SLIDER */}
           <View style={styles.lastMinuteSection}>
-            <Text style={styles.lastMinuteTitle}>Phòng của chúng tôi</Text>
+            <Text style={styles.lastMinuteTitle}>{t("00067")}</Text>
             
             <ScrollView
               horizontal

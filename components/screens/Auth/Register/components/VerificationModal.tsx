@@ -10,11 +10,13 @@ import {
   TextInput,
   TouchableOpacity,
   Keyboard,
-  StyleSheet,
   ActivityIndicator,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import CustomButton from '@/components/ui/Button';
+import { useTheme } from '@/providers/ThemeContext';
+import { createStyles } from './VerificationModal.style';
+import { useTranslate } from '@/hooks/useTranslate';
 
 interface VerificationModalProps {
   visible: boolean;
@@ -43,6 +45,9 @@ const VerificationModal: React.FC<VerificationModalProps> = ({
   isVerifying,
   isResending,
 }) => {
+  const t = useTranslate();
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
   return (
     <Modal
       visible={visible}
@@ -62,9 +67,9 @@ const VerificationModal: React.FC<VerificationModalProps> = ({
                   <FontAwesome name="times" size={20} color="#fff" />
                 </TouchableOpacity>
 
-                <Text style={styles.modalTitle}>Xác thực tài khoản</Text>
+                <Text style={styles.modalTitle}>{t("00010")}</Text>
                 <Text style={styles.modalDescription}>
-                  Vui lòng nhập mã xác thực 4 chữ số đã được gửi đến email của bạn
+                {t("00011")}
                 </Text>
 
                 <View style={styles.inputContainer}>
@@ -76,7 +81,7 @@ const VerificationModal: React.FC<VerificationModalProps> = ({
                     }
                     keyboardType="numeric"
                     maxLength={4}
-                    placeholder="Nhập mã"
+                    placeholder={t("00012")}
                     placeholderTextColor="#999"
                   />
                   {errorMessage ? (
@@ -85,7 +90,7 @@ const VerificationModal: React.FC<VerificationModalProps> = ({
                 </View>
 
                 <CustomButton
-                  title="Xác thực"
+                  title={t("00013")}
                   onPress={onVerify}
                   isLoading={isVerifying}
                   disabled={isVerifying}
@@ -110,8 +115,8 @@ const VerificationModal: React.FC<VerificationModalProps> = ({
                       ]}
                     >
                       {isResendDisabled
-                        ? `Gửi lại mã sau (${countdown}s)`
-                        : 'Gửi lại mã'}
+                        ? t("00015") + `(${countdown}s)`
+                        : t("00014")}
                     </Text>
                   )}
                 </TouchableOpacity>
@@ -124,88 +129,5 @@ const VerificationModal: React.FC<VerificationModalProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContainer: {
-    width: '90%',
-    maxWidth: 340,
-  },
-  modalContent: {
-    backgroundColor: '#2a2a2a',
-    borderRadius: 12,
-    padding: 24,
-    alignItems: 'center',
-  },
-  closeButton: {
-    position: 'absolute',
-    top: 12,
-    right: 12,
-    padding: 8,
-  },
-  modalTitle: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginTop: 8,
-    marginBottom: 16,
-    textAlign: 'center',
-  },
-  modalDescription: {
-    color: '#bbb',
-    fontSize: 14,
-    textAlign: 'center',
-    marginBottom: 24,
-    paddingHorizontal: 8,
-  },
-  inputContainer: {
-    width: '100%',
-    marginBottom: 24,
-  },
-  singleCodeInput: {
-    backgroundColor: '#fff',
-    color: '#000',
-    width: '100%',
-    height: 50,
-    borderRadius: 8,
-    fontSize: 20,
-    textAlign: 'center',
-    letterSpacing: 5,
-    fontWeight: '600',
-  },
-  inputError: {
-    borderWidth: 1,
-    borderColor: '#FF4141',
-  },
-  errorText: {
-    color: '#FF4141',
-    fontSize: 12,
-    marginTop: 4,
-    textAlign: 'center',
-  },
-  verifyButton: {
-    width: '100%',
-    marginBottom: 12,
-  },
-  resendCodeButton: {
-    paddingVertical: 12,
-    height: 44,
-    justifyContent: 'center',
-  },
-  resendCodeText: {
-    color: '#B58E50',
-    fontSize: 14,
-  },
-  resendCodeButtonDisabled: {
-    opacity: 0.6,
-  },
-  resendCodeTextDisabled: {
-    color: '#999',
-  },
-});
 
 export default VerificationModal;

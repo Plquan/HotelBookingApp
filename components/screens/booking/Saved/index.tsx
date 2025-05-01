@@ -20,7 +20,9 @@ import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
 import CustomHeader from '@/components/ui/CustomHeader';
 import { useTheme } from '@/providers/ThemeContext';
 import { createStyles } from './SavedScreen.style';
+import {useTranslate} from '@/hooks/useTranslate';
 export default function SavedScreen() {
+    const t = useTranslate();
     const { theme } = useTheme();
     const styles = createStyles(theme);
     const dispatch = useDispatch<AppDispatch>();
@@ -35,12 +37,12 @@ export default function SavedScreen() {
     const renderEmptyState = () => (
         <View style={styles.emptyContainer}>
             <FontAwesome name="heart-o" size={64} color="#666" />
-            <Text style={styles.emptyText}>Chưa có phòng được lưu</Text>
+            <Text style={styles.emptyText}>{t("00062")}</Text>
             <TouchableOpacity 
                 style={styles.browseButton}
                 onPress={() => router.push('/(booking)/findRoom')}
             >
-                <Text style={styles.browseButtonText}>Khám phá phòng</Text>
+                <Text style={styles.browseButtonText}>{t("00063")}</Text>
             </TouchableOpacity>
         </View>
     );
@@ -100,7 +102,7 @@ export default function SavedScreen() {
             
             {/* Using the new CustomHeader component */}
             <CustomHeader 
-                title="Phòng đã lưu" 
+                title={t("00061")}
                 showBackButton={false}
             />
 

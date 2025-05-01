@@ -23,8 +23,10 @@ import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
 import CustomHeader from '@/components/ui/CustomHeader';
 import { useTheme } from '@/providers/ThemeContext';
 import { createStyles } from './login.style';
+import { useTranslate } from '@/hooks/useTranslate';
 
 export default function LoginScreen() {
+  const t = useTranslate();
   const { theme } = useTheme();
   const styles = createStyles(theme);
   const [userName, setUserName] = useState('');
@@ -80,7 +82,7 @@ export default function LoginScreen() {
       <View style={styles.container}>
 
         <CustomHeader 
-                title="Đăng nhập" 
+                title= {t("00001")}
                 showBackButton={true}
             />
 
@@ -111,7 +113,7 @@ export default function LoginScreen() {
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
-              placeholder="Mật khẩu"
+              placeholder={t("00004")}
               placeholderTextColor="#888"
               secureTextEntry={!showPassword}
               value={password}
@@ -131,24 +133,24 @@ export default function LoginScreen() {
 
           {/* Forgot Password Link */}
           <TouchableOpacity style={styles.forgotPasswordContainer}>
-            <Text style={styles.forgotPasswordText}>Quên mật khẩu?</Text>
+            <Text style={styles.forgotPasswordText}>{t("00003")}</Text>
           </TouchableOpacity>
 
           {/* Login Button */}
           <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-            <Text style={styles.loginButtonText}>Đăng nhập</Text>
+            <Text style={styles.loginButtonText}>{t("00001")}</Text>
           </TouchableOpacity>
 
           {/* Or divider */}
           <View style={styles.dividerContainer}>
             <View style={styles.divider} />
-            <Text style={styles.dividerText}>hoặc</Text>
+            <Text style={styles.dividerText}>{t("00005")}</Text>
             <View style={styles.divider} />
           </View>
 
           {/* Register Link */}
           <TouchableOpacity style={styles.registerButton} onPress={() => {  router.replace('/(auth)/register');}}>
-            <Text style={styles.registerButtonText}>Tạo tài khoản mới</Text>
+            <Text style={styles.registerButtonText}>{t("00002")}</Text>
           </TouchableOpacity>
         </View>
       </View>

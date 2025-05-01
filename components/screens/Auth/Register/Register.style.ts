@@ -27,7 +27,7 @@ export const createStyles = (theme: Theme) => StyleSheet.create({
       resizeMode: 'contain',
     },
     logoText: {
-      color: theme.borderInput,
+      color: theme.text,
       fontSize: 24,
       fontWeight: 'bold',
       letterSpacing: 2,

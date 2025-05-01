@@ -10,6 +10,7 @@ import { store } from '@/stores';
 import { Provider } from 'react-redux';
 import GetCurrentUserProvider from '@/providers/GetCurrentUserProvider';
 import { ThemeProvider } from '@/providers/ThemeContext';
+import { LanguageProvider } from '@/providers/Languages/LanguageContext';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -32,6 +33,7 @@ export default function RootLayout() {
   return (
     <Provider store={store}>
       <GetCurrentUserProvider>
+        <LanguageProvider>
         <ThemeProvider>
           <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -43,6 +45,7 @@ export default function RootLayout() {
           <StatusBar style="auto" />
           <Toast />
         </ThemeProvider>
+        </LanguageProvider>     
       </GetCurrentUserProvider>
     </Provider>
   );

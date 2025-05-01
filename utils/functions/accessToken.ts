@@ -17,5 +17,5 @@ export const removeAccessToken = async (): Promise<void> => {
     } catch (error) {
       console.error("Lỗi khi xóa accessToken:", error);
     }
-  };
+};
 

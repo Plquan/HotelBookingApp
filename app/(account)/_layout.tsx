@@ -10,6 +10,13 @@ export default function Layout() {
           headerShown: false,
         }}
       />
+        <Stack.Screen
+        name="language"
+       
+        options={{
+          headerShown: false,
+        }}
+      />
          <Stack.Screen
         name="changePassword"
        

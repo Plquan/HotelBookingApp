@@ -24,8 +24,10 @@ import  env from '@/constants/envConstant';
 import { useTheme } from '@/providers/ThemeContext';
 import { createStyles } from './Setting.style';
 const {IMAGE_URL} = env;
+import { useTranslate } from '@/hooks/useTranslate';
 
 export default function SettingScreen() {
+  const t = useTranslate();
   const { theme, toggleTheme,themeMode } = useTheme();
   const styles = createStyles(theme);
   const router = useRouter();
@@ -39,7 +41,6 @@ export default function SettingScreen() {
   );
   
   const [isModalVisible, setModalVisible] = useState(false);
-  const [currentLanguage, setCurrentLanguage] = useState('vi');
 
   const handleLogin = async () => {
     router.push('/(auth)/login');
@@ -89,14 +90,13 @@ export default function SettingScreen() {
                 <FontAwesome5 name="user" size={60} color="#fff" />
               </View>
               <Text style={styles.description}>
-                Đăng nhập để quản lý chuyến đi và nhận giảm giá Genius tại các
-                chỗ nghỉ trên toàn cầu.
+              {t("00020")}
               </Text>
               <TouchableOpacity
                 style={styles.loginButton}
                 onPress={handleLogin}
               >
-                <Text style={styles.loginButtonText}>Đăng nhập</Text>
+                <Text style={styles.loginButtonText}>{t("00001")}</Text>
               </TouchableOpacity>
             </View>
 
@@ -105,10 +105,6 @@ export default function SettingScreen() {
         </SafeAreaView>
     );
   }
-
-  const toggleLanguage = () => {
-    setCurrentLanguage(currentLanguage === 'vi' ? 'en' : 'vi');
-  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -145,13 +141,13 @@ export default function SettingScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.section}>
-          <Text style={styles.sectionHeader}>Quản lí tài khoản</Text>
+          <Text style={styles.sectionHeader}>{t("00021")}</Text>
           <View style={styles.settingRowContainer}>
             <TouchableOpacity style={styles.settingRow} onPress={() => router.push('/(account)/profile')}>
               <View style={styles.settingIconContainer}>
                 <FontAwesome5 name="question-circle" size={20} color="#B58E50" />
               </View>
-              <Text style={styles.settingText}>Thông tin cá nhân</Text>
+              <Text style={styles.settingText}>{t("00024")}</Text>
               <FontAwesome5
                 name="chevron-right"
                 size={16}
@@ -166,7 +162,7 @@ export default function SettingScreen() {
               <View style={styles.settingIconContainer}>
                 <FontAwesome5 name="shield-alt" size={20} color="#B58E50" />
               </View>
-              <Text style={styles.settingText}>Mật khẩu và bảo mật</Text>
+              <Text style={styles.settingText}>{t("00022")}</Text>
               <FontAwesome5
                 name="chevron-right"
                 size={16}
@@ -177,36 +173,16 @@ export default function SettingScreen() {
           </View>
         </View>
        
+    
         <View style={styles.section}>
-          <Text style={styles.sectionHeader}>Dành cho chủ chỗ nghỉ</Text>
+          <Text style={styles.sectionHeader}>{t("00018")}</Text>
           <View style={styles.settingRowContainer}>
-            <TouchableOpacity style={[styles.settingRow, styles.lastSettingRow]}>
-              <View style={styles.settingIconContainer}>
-                <FontAwesome5 name="home" size={20} color="#B58E50" />
-              </View>
-              <Text style={styles.settingText}>Đăng chỗ nghỉ</Text>
-              <FontAwesome5
-                name="chevron-right"
-                size={16}
-                color="#8E8E93"
-                style={styles.rowArrow}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionHeader}>Cài đặt</Text>
-          <View style={styles.settingRowContainer}>
-            <TouchableOpacity style={styles.settingRow} onPress={toggleLanguage}>
+            <TouchableOpacity style={styles.settingRow} onPress={() => router.push('/(account)/language')}>
               <View style={styles.settingIconContainer}>
                 <FontAwesome5 name="language" size={20} color="#B58E50" />
               </View>
-              <Text style={styles.settingText}>Ngôn ngữ</Text>
+              <Text style={styles.settingText}>{t("00032")}</Text>
               <View style={styles.settingValueContainer}>
-                <Text style={styles.settingValue}>
-                  {currentLanguage === 'vi' ? 'Tiếng Việt' : 'English'}
-                </Text>
                 <FontAwesome5
                   name="chevron-right"
                   size={16}
@@ -224,7 +200,7 @@ export default function SettingScreen() {
                   color="#B58E50" 
                 />
               </View>
-              <Text style={styles.settingText}>Chế độ tối</Text>
+              <Text style={styles.settingText}>{t("00033")}</Text>
               <View style={styles.settingValueContainer}>
                 <Switch
                   trackColor={{ false: "#767577", true: "#B58E50" }}
@@ -241,7 +217,7 @@ export default function SettingScreen() {
 
         <View style={styles.logoutSection}>
           <CustomButton
-            title="Đăng xuất"
+            title={t("00023")}
             onPress={handleLogout}
             style={styles.logoutButton}
           />

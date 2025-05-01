@@ -27,8 +27,10 @@ import SaveRoom from '@/components/ui/SavedIcon';
 import { useTheme } from '@/providers/ThemeContext';
 import { createStyles } from './CheckRoom.style';
 import SelectInput from '@/components/ui/SelectInput';
+import { useTranslate } from '@/hooks/useTranslate';
 
 export default function CheckRoomScreen() {
+  const t = useTranslate();
   const { theme } = useTheme();
   const styles = createStyles(theme);
   const bookingData = useSelector((state: RootState) => state.bookingStore.bookingData);
@@ -207,7 +209,7 @@ export default function CheckRoomScreen() {
             <TouchableOpacity onPress={handleBack}>
               <Ionicons name="chevron-back" size={24} style={styles.iconColor} />
             </TouchableOpacity>
-            <Text style={styles.headerTitle}>Phòng trống hiện tại</Text>
+            <Text style={styles.headerTitle}>{t("00071")}</Text>
           </View>
           
           {/* Use CustomDatePicker component */}
@@ -224,7 +226,7 @@ export default function CheckRoomScreen() {
         </View>
       </View>
       
-      <Text style={styles.totalCount}>1 chỗ nghỉ</Text>
+      <Text style={styles.totalCount}>1 {t("00072")}</Text>
       <FlatList
         data={availableRooms.filter(room => room.availableRooms > 0)}
         renderItem={renderHotelItem}
@@ -233,7 +235,7 @@ export default function CheckRoomScreen() {
       />
            <View style={styles.bookingButtonWrapper}>
                <CustomButton
-                  title="Đặt phòng ngay"
+                  title={t("00075")}
                   onPress={handleBooking}
                   style={styles.bookingButton}
                 />

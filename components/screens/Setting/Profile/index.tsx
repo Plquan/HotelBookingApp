@@ -22,8 +22,10 @@ import { authAction } from '@/stores/authStore/authReducer';
 const {IMAGE_URL} = env
 import {createStyles} from './Profile.style';
 import { useTheme } from '@/providers/ThemeContext';
+import { useTranslate } from '@/hooks/useTranslate';
 
 export default function ProfileScreen() {
+  const t = useTranslate();
   const { theme } = useTheme();
   const styles = createStyles(theme);
   const router = useRouter();
@@ -55,7 +57,7 @@ export default function ProfileScreen() {
       <StatusBar barStyle="light-content" backgroundColor="#222" />
       <LoadingOverlayView visible={loading} text="Đang cập nhật..." />
       <CustomHeader 
-        title="Thông tin cá nhân"
+        title={t("00028")}
         showBackButton={true}
         onBackPress={() => router.back()}
       />
@@ -79,13 +81,13 @@ export default function ProfileScreen() {
 
         {/* Info Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Thông tin cơ bản</Text>
+          <Text style={styles.sectionTitle}>{t("00027")}</Text>
           
           <TouchableOpacity 
             style={styles.infoRow}
             onPress={() => router.push('/(account)/profile/editName')}
           >
-            <Text style={styles.label}>Họ và tên</Text>
+            <Text style={styles.label}>{t("00025")}</Text>
             <Text style={styles.value}>{currentUser?.userName}</Text>
             <FontAwesome5 name="chevron-right" size={16} color="#8E8E93" />
           </TouchableOpacity>
@@ -100,7 +102,7 @@ export default function ProfileScreen() {
           <TouchableOpacity 
             style={styles.infoRow}         
           >
-            <Text style={styles.label}>Số điện thoại</Text>
+            <Text style={styles.label}>{t("00026")}</Text>
             <Text style={styles.value}>{currentUser?.phoneNumber}</Text>
           </TouchableOpacity>
         </View>

@@ -17,7 +17,9 @@ import Toast from 'react-native-toast-message';
 import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
 import { createStyles } from './ChangePassword.style';
 import { useTheme } from '@/providers/ThemeContext';
+import { useTranslate } from '@/hooks/useTranslate';
 export default function ChangePasswordScreen() {
+  const t = useTranslate();
   const { theme } = useTheme();
   const styles = createStyles(theme);
   const router = useRouter();
@@ -84,7 +86,7 @@ export default function ChangePasswordScreen() {
       <StatusBar barStyle="light-content" backgroundColor="#222" />
       
       <CustomHeader 
-        title="Đổi mật khẩu"
+        title={t("00038")}
         showBackButton={true}
         onBackPress={() => router.back()}
       />
@@ -92,13 +94,13 @@ export default function ChangePasswordScreen() {
       <ScrollView style={styles.content}>
         <View style={styles.section}>
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Mật khẩu hiện tại</Text>
+            <Text style={styles.label}>{t("00035")}</Text>
             <View style={styles.passwordInput}>
               <TextInput
                 style={styles.input}
                 value={formData.currentPassword}
                 onChangeText={(text) => setFormData({...formData, currentPassword: text})}
-                placeholder="Mật khẩu hiện tại"
+                placeholder={t("00035")}
                 placeholderTextColor="#666"
                 secureTextEntry={!showPasswords.current}
               />
@@ -116,13 +118,13 @@ export default function ChangePasswordScreen() {
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Mật khẩu mới</Text>
+            <Text style={styles.label}>{t("00036")}</Text>
             <View style={styles.passwordInput}>
               <TextInput
                 style={styles.input}
                 value={formData.newPassword}
                 onChangeText={(text) => setFormData({...formData, newPassword: text})}
-                placeholder="Mật khẩu mới"
+                placeholder={t("00036")}
                 placeholderTextColor="#666"
                 secureTextEntry={!showPasswords.new}
               />
@@ -140,13 +142,13 @@ export default function ChangePasswordScreen() {
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Xác nhận mật khẩu mới</Text>
+            <Text style={styles.label}>{t("00039")}</Text>
             <View style={styles.passwordInput}>
               <TextInput
                 style={styles.input}
                 value={formData.confirmPassword}
                 onChangeText={(text) => setFormData({...formData, confirmPassword: text})}
-                placeholder="Nhập lại mật khẩu mới"
+                placeholder={t("00037")}
                 placeholderTextColor="#666"
                 secureTextEntry={!showPasswords.confirm}
               />
@@ -165,7 +167,7 @@ export default function ChangePasswordScreen() {
         </View>
 
         <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-          <Text style={styles.saveButtonText}>Cập nhật mật khẩu</Text>
+          <Text style={styles.saveButtonText}>{t("00038")}</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>

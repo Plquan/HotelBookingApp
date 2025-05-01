@@ -20,8 +20,10 @@ import CustomButton from '@/components/ui/Button';
 import { authAction } from '@/stores/authStore/authReducer';
 import { createStyles } from './EditName.style';
 import { useTheme } from '@/providers/ThemeContext';
+import { useTranslate } from '@/hooks/useTranslate';
 
 export default function EditUsernameScreen() {
+  const t = useTranslate();
   const { theme } = useTheme();
   const styles = createStyles(theme);
   const router = useRouter();
@@ -53,7 +55,7 @@ export default function EditUsernameScreen() {
       <LoadingOverlayView visible={loading} text="Đang cập nhật..." />
       
       <CustomHeader 
-        title="Chỉnh sửa tên"
+        title={t("00030")}
         showBackButton={true}
         onBackPress={() => router.back()}
       />
@@ -70,7 +72,7 @@ export default function EditUsernameScreen() {
                 style={styles.textbox}
                 value={userName}
                 onChangeText={setUserName}
-                placeholder="Nhập tên của bạn"
+                placeholder={t("00031")}
                 placeholderTextColor="#777"
               />
               {userName.trim() ? (
@@ -86,7 +88,7 @@ export default function EditUsernameScreen() {
           </View>
           <View style={styles.bookingButtonWrapper}>
             <CustomButton
-              title="Lưu thay đổi"
+              title={t("00034")}
               onPress={handleSave}
               style={styles.bookingButton}
             />
