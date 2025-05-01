@@ -57,6 +57,14 @@ export const bookingSlice = createSlice({
     setSelectedRoom: (state, action: PayloadAction<ISelectedRoom[]>) => {
       state.selectedRoom = action.payload;
     },
+    updateBookedRoomStatus: (state, action) => {
+      const { bookingId, status } = action.payload;
+    
+      const booking = state.bookedRoom.find(b => b.id === bookingId);
+      if (booking) {
+        booking.status = status;
+      }
+    }
     // setBookedRoom: (state, action: PayloadAction<IBookedData[]>) => {
     //   state.bookedRoom = action.payload;
     // },

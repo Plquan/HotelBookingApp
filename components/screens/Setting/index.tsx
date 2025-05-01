@@ -9,8 +9,8 @@ import {
   Modal,
   Alert,
   StatusBar,
+  Switch
 } from 'react-native';
-import MainLayout from '@/components/Layouts/MainLayout';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useSelector, useDispatch } from 'react-redux';
@@ -20,11 +20,16 @@ import authSevices from '@/services/authServices';
 import { authAction } from '@/stores/authStore/authReducer';
 import CustomButton from '@/components/ui/Button';
 import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
-
-// Import styles từ file riêng
-import styles from '@/components/screens/Setting/Setting.style';
+import  env from '@/constants/envConstant';
+import { useTheme } from '@/providers/ThemeContext';
+import { createStyles } from './Setting.style';
+const {IMAGE_URL} = env;
+import { useTranslate } from '@/hooks/useTranslate';
 
 export default function SettingScreen() {
+  const t = useTranslate();
+  const { theme, toggleTheme,themeMode } = useTheme();
+  const styles = createStyles(theme);
   const router = useRouter();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
@@ -76,35 +81,8 @@ export default function SettingScreen() {
     );
   };
 
-  // Hàm mở thư viện ảnh
-  const openImageLibrary = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    
-    if (status !== 'granted') {
-      Alert.alert(
-        'Cần quyền truy cập',
-        'Ứng dụng cần quyền truy cập vào thư viện ảnh của bạn để chọn avatar.'
-      );
-      return;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 0.7,
-    });
-
-    if (!result.canceled && result.assets && result.assets.length > 0) {
-      toggleModal();
-      console.log('Selected image URI:', result.assets[0].uri);
-      Alert.alert('Thành công', 'Ảnh đại diện đã được chọn thành công!');
-    }
-  };
-
   if (!isAuthenticated) {
     return (
-      <MainLayout>
         <SafeAreaView style={styles.safeArea}>
           <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.loginWrapper}>
@@ -112,19 +90,19 @@ export default function SettingScreen() {
                 <FontAwesome5 name="user" size={60} color="#fff" />
               </View>
               <Text style={styles.description}>
-                Đăng nhập để quản lý chuyến đi và nhận giảm giá Genius tại các
-                chỗ nghỉ trên toàn cầu.
+              {t("00020")}
               </Text>
               <TouchableOpacity
                 style={styles.loginButton}
                 onPress={handleLogin}
               >
-                <Text style={styles.loginButtonText}>Đăng nhập</Text>
+                <Text style={styles.loginButtonText}>{t("00001")}</Text>
               </TouchableOpacity>
             </View>
+
+            
           </ScrollView>
         </SafeAreaView>
-      </MainLayout>
     );
   }
 
@@ -140,7 +118,7 @@ export default function SettingScreen() {
             <TouchableOpacity onPress={toggleModal}>
               <View style={styles.avatarWrapper}>
                 <Image
-                  source={require('@/assets/images/avatar.png')}
+                  source={{uri: IMAGE_URL + currentUser?.avatar}}
                   defaultSource={require('@/assets/images/avatar.png')}
                   style={styles.avatar}
                 />
@@ -152,14 +130,7 @@ export default function SettingScreen() {
               </Text>
             </View>
           </View>
-          <View style={styles.headerIcons}>
-            <TouchableOpacity style={styles.iconButton}>
-              <FontAwesome5 name="comment" size={22} color="#fff" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButton}>
-              <FontAwesome5 name="bell" size={22} color="#fff" />
-            </TouchableOpacity>
-          </View>
+  
         </View>
       </View>
 
@@ -170,13 +141,13 @@ export default function SettingScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.section}>
-          <Text style={styles.sectionHeader}>Quản lí tài khoản</Text>
+          <Text style={styles.sectionHeader}>{t("00021")}</Text>
           <View style={styles.settingRowContainer}>
-            <TouchableOpacity style={styles.settingRow}>
+            <TouchableOpacity style={styles.settingRow} onPress={() => router.push('/(account)/profile')}>
               <View style={styles.settingIconContainer}>
                 <FontAwesome5 name="question-circle" size={20} color="#B58E50" />
               </View>
-              <Text style={styles.settingText}>Thông tin cá nhân</Text>
+              <Text style={styles.settingText}>{t("00024")}</Text>
               <FontAwesome5
                 name="chevron-right"
                 size={16}
@@ -184,11 +155,14 @@ export default function SettingScreen() {
                 style={styles.rowArrow}
               />
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.settingRow, styles.lastSettingRow]}>
+            <TouchableOpacity 
+              style={[styles.settingRow, styles.lastSettingRow]} 
+              onPress={() => router.push('/(account)/changePassword')}
+            >
               <View style={styles.settingIconContainer}>
                 <FontAwesome5 name="shield-alt" size={20} color="#B58E50" />
               </View>
-              <Text style={styles.settingText}>Trung tâm thông tin và bảo mật</Text>
+              <Text style={styles.settingText}>{t("00022")}</Text>
               <FontAwesome5
                 name="chevron-right"
                 size={16}
@@ -198,28 +172,52 @@ export default function SettingScreen() {
             </TouchableOpacity>
           </View>
         </View>
-
+       
+    
         <View style={styles.section}>
-          <Text style={styles.sectionHeader}>Dành cho chủ chỗ nghỉ</Text>
+          <Text style={styles.sectionHeader}>{t("00018")}</Text>
           <View style={styles.settingRowContainer}>
-            <TouchableOpacity style={[styles.settingRow, styles.lastSettingRow]}>
+            <TouchableOpacity style={styles.settingRow} onPress={() => router.push('/(account)/language')}>
               <View style={styles.settingIconContainer}>
-                <FontAwesome5 name="home" size={20} color="#B58E50" />
+                <FontAwesome5 name="language" size={20} color="#B58E50" />
               </View>
-              <Text style={styles.settingText}>Đăng chỗ nghỉ</Text>
-              <FontAwesome5
-                name="chevron-right"
-                size={16}
-                color="#8E8E93"
-                style={styles.rowArrow}
-              />
+              <Text style={styles.settingText}>{t("00032")}</Text>
+              <View style={styles.settingValueContainer}>
+                <FontAwesome5
+                  name="chevron-right"
+                  size={16}
+                  color="#8E8E93"
+                  style={styles.rowArrow}
+                />
+              </View>
             </TouchableOpacity>
+
+            <View style={[styles.settingRow, styles.lastSettingRow]}>
+              <View style={styles.settingIconContainer}>
+                <FontAwesome5 
+                  name={themeMode ? "moon" : "sun"} 
+                  size={20} 
+                  color="#B58E50" 
+                />
+              </View>
+              <Text style={styles.settingText}>{t("00033")}</Text>
+              <View style={styles.settingValueContainer}>
+                <Switch
+                  trackColor={{ false: "#767577", true: "#B58E50" }}
+                  thumbColor={theme ? "#fff" : "#f4f3f4"}
+                  ios_backgroundColor="#3e3e3e"
+                  onValueChange={toggleTheme}
+                  value={themeMode}
+                  style={{ transform: [{ scaleX: .8 }, { scaleY: .8 }] }}
+                />
+              </View>
+            </View>
           </View>
         </View>
 
         <View style={styles.logoutSection}>
           <CustomButton
-            title="Đăng xuất"
+            title={t("00023")}
             onPress={handleLogout}
             style={styles.logoutButton}
           />
@@ -228,35 +226,23 @@ export default function SettingScreen() {
 
       <Modal
         visible={isModalVisible}
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         onRequestClose={toggleModal}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Tùy chọn ảnh đại diện</Text>
-            <TouchableOpacity
-              style={styles.modalOption}
-              onPress={openImageLibrary}
-            >
-              <FontAwesome5 name="images" size={20} color="#B58E50" style={styles.modalOptionIcon} />
-              <Text style={styles.modalOptionText}>Chọn từ thư viện</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.modalOption}
-              onPress={toggleModal}
-            >
-              <FontAwesome5 name="eye" size={20} color="#B58E50" style={styles.modalOptionIcon} />
-              <Text style={styles.modalOptionText}>Xem ảnh đại diện</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.modalCancel}
-              onPress={toggleModal}
-            >
-              <Text style={styles.modalCancelText}>Hủy</Text>
-            </TouchableOpacity>
+        <TouchableOpacity 
+          style={styles.modalOverlay} 
+          activeOpacity={1} 
+          onPress={toggleModal}
+        >
+          <View style={styles.modalImageContainer}>
+            <Image
+             source={{uri: IMAGE_URL + currentUser?.avatar}}
+              style={styles.zoomedAvatar}
+              resizeMode="cover"
+            />
           </View>
-        </View>
+        </TouchableOpacity>
       </Modal>
     </SafeAreaView>
   );

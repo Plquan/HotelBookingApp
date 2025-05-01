@@ -1,27 +1,28 @@
 import { StyleSheet, Platform, StatusBar } from 'react-native';
+import { Theme } from '@/providers/ThemeContext';
 
-export default StyleSheet.create({
+export const createStyles = (theme: Theme) => StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#333',
+    backgroundColor: theme.background,
   },
   // Not logged in styles
   container: {
     flexGrow: 1,
-    backgroundColor: '#333',
+    backgroundColor: theme.background,
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 20,
   },
   loginWrapper: {
-    backgroundColor: '#444', 
+    backgroundColor: theme.content, 
     width: '90%',
     borderRadius: 30,
     padding: 20,
     alignItems: 'center',
   },
   avatarContainer: {
-    backgroundColor: '#333', 
+    backgroundColor: theme.background, 
     width: 100,
     height: 100,
     borderRadius: 50,
@@ -30,7 +31,7 @@ export default StyleSheet.create({
     marginBottom: 15,
   },
   description: {
-    color: '#fff',
+    color: theme.text,
     fontSize: 15,
     textAlign: 'center',
     marginBottom: 20,
@@ -49,7 +50,7 @@ export default StyleSheet.create({
   },
   // Fixed header styles
   fixedHeader: {
-    backgroundColor: '#333',
+    backgroundColor: theme.background,
     zIndex: 999,
     elevation: 3,
     shadowColor: '#000',
@@ -57,16 +58,10 @@ export default StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 2,
   },
-  // Logged in styles
-  loggedInContainer: {
-    flexGrow: 1,
-    backgroundColor: '#333',
-    paddingBottom: 30,
-  },
   // Scrollable content styles
   scrollContent: {
     flex: 1,
-    backgroundColor: '#222',
+    backgroundColor: theme.content,
   },
   scrollContentContainer: {
     paddingBottom: 30,
@@ -100,24 +95,19 @@ export default StyleSheet.create({
     justifyContent: 'center',
   },
   userName: {
-    color: '#fff',
+    color: theme.text,
     fontSize: 24,
     fontWeight: 'bold',
-  },
-  headerIcons: {
-    flexDirection: 'row',
-  },
-  iconButton: {
-    marginLeft: 20,
   },
   // Các section mới
   section: {
     marginTop: 20,
     paddingHorizontal: 16,
+
   },
   // Section header
   sectionHeader: {
-    color: 'white',
+    color: theme.text,
     fontSize: 14,
     fontWeight: '600',
     paddingLeft: 10,
@@ -133,11 +123,11 @@ export default StyleSheet.create({
   settingRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#333',
+    backgroundColor: theme.background,
     paddingHorizontal: 16,
     paddingVertical: 14,
     borderBottomWidth: 0.5,
-    borderBottomColor: '#333',
+    borderBottomColor: theme.borderInput,
   },
   // Row cuối cùng không có border ở dưới
   lastSettingRow: {
@@ -151,7 +141,7 @@ export default StyleSheet.create({
     marginRight: 16,
   },
   settingText: {
-    color: '#FFFFFF',
+    color: theme.text,
     fontSize: 16,
     flex: 1,
   },
@@ -173,8 +163,9 @@ export default StyleSheet.create({
   // Modal styles
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   modalContainer: {
     backgroundColor: '#1C1C1E', 
@@ -212,5 +203,22 @@ export default StyleSheet.create({
     color: '#FF3B30',
     textAlign: 'center',
     fontWeight: '500',
+  },
+  // Add these new styles
+  settingValueContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  modalImageContainer: {
+    width: 280,
+    height: 280,
+    borderRadius: 140,
+    overflow: 'hidden',
+    borderWidth: 3,
+    borderColor: '#B58E50',
+  },
+  zoomedAvatar: {
+    width: '100%',
+    height: '100%',
   },
 });

@@ -5,7 +5,7 @@ import roomServices from '@/services/roomService';
 import { AppDispatch } from '@/stores';
 import { roomTypeAction } from '@/stores/roomTypeStore/roomTypeReducer';
 import { useDispatch } from 'react-redux';
-
+import { useTheme } from '@/providers/ThemeContext';
 interface SaveRoomProps {
   roomId: number;
   isSaved?: boolean;
@@ -20,9 +20,9 @@ const SaveRoom: React.FC<SaveRoomProps> = ({
   roomId,
   isSaved = false,
   size = 22,
-  color = "white",
+  color = useTheme().theme.text,
   savedColor = "#ff6b6b",
-  loadingColor = "white",
+  loadingColor = useTheme().theme.text,
   style = {}
 }) => {
   const [saved, setSaved] = useState<boolean>(isSaved);

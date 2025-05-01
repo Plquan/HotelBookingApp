@@ -1,13 +1,14 @@
 import { StyleSheet } from 'react-native';
+import { Theme } from '@/providers/ThemeContext';
 
-export const styles = StyleSheet.create({
+export const createStyles = (theme: Theme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#333',
+    backgroundColor: theme.background,
   },
   content: {
     flex: 1,
-    backgroundColor: '#222',
+    backgroundColor: theme.content,
   },
   
   // Header styles
@@ -17,27 +18,18 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 12,
     paddingHorizontal: 16,
-    backgroundColor: '#333',
+    backgroundColor: theme.background,
     position: 'relative',
   },
   headerTitle: {
-    color: '#fff',
+    color: theme.text,
     fontSize: 16,
     fontWeight: '500',
   },
-  headerIcons: {
-    flexDirection: 'row',
-    position: 'absolute',
-    right: 16,
-  },
-  iconButton: {
-    marginLeft: 20,
-  },
-  
    // Tab styles
    tabContainer: {
     flexDirection: 'row',
-    backgroundColor: '#222',
+    backgroundColor: theme.content,
     paddingHorizontal: 16,
     paddingBottom: 12,
     paddingTop:20
@@ -58,7 +50,7 @@ export const styles = StyleSheet.create({
     borderColor: '#b58e50',
   },
   tabText: {
-    color: 'white',
+    color: theme.text,
     fontWeight:500,
     fontSize: 14,
   },
@@ -74,7 +66,7 @@ export const styles = StyleSheet.create({
     marginTop: 16,
     borderRadius: 8,
     overflow: 'hidden',
-    backgroundColor: '#333',
+    backgroundColor: theme.background,
   },
   tripImage: {
     width: '100%',
@@ -85,19 +77,29 @@ export const styles = StyleSheet.create({
     padding: 16,
     paddingRight: 40,
   },
-  tripLocation: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 2,
-  },
   tripDate: {
-    color: '#aaa',
-    fontSize: 14,
+    color: theme.text,
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 8,
   },
   chevronIcon: {
     position: 'absolute',
     right: 16,
     bottom: 24,
+  },
+  statusBadge: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginTop: 8,
+    alignSelf: 'flex-start',
+  },
+  statusText: {
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  tripInfo: {
+    flex: 1,
   }
 });

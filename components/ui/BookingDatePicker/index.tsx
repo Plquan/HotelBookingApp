@@ -9,6 +9,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { format } from 'date-fns';
+import { useTranslate } from '@/hooks/useTranslate';
 
 interface DatePickerProps {
   fromDate: Date;
@@ -41,6 +42,7 @@ const CustomDatePicker: React.FC<DatePickerProps> = ({
   headerStyle,
   dateTextStyle,
 }) => {
+  const t = useTranslate();
   const [showDatePickerModal, setShowDatePickerModal] = useState(false);
   const [showArrivalPicker, setShowArrivalPicker] = useState(false);
   const [showDeparturePicker, setShowDeparturePicker] = useState(false);
@@ -108,7 +110,7 @@ const CustomDatePicker: React.FC<DatePickerProps> = ({
               <TouchableOpacity onPress={toggleDatePickerModal}>
                 <Ionicons name="close" size={24} color="#333" />
               </TouchableOpacity>
-              <Text style={styles.modalTitle}>{modalTitle}</Text>
+              <Text style={styles.modalTitle}>{t("00074")}</Text>
               <View style={{ width: 24 }} />
             </View>
 
@@ -117,7 +119,7 @@ const CustomDatePicker: React.FC<DatePickerProps> = ({
                 style={[styles.dateSelection, showArrivalPicker && styles.activeDateSelection]}
                 onPress={toggleArrivalPicker}
               >
-                <Text style={styles.dateSelectionLabel}>NGÀY ĐẾN</Text>
+                <Text style={styles.dateSelectionLabel}>{t("00064")}</Text>
                 <Text style={styles.dateSelectionValue}>{format(fromDate, 'dd/MM/yyyy')}</Text>
               </TouchableOpacity>
 
@@ -125,7 +127,7 @@ const CustomDatePicker: React.FC<DatePickerProps> = ({
                 style={[styles.dateSelection, showDeparturePicker && styles.activeDateSelection]}
                 onPress={toggleDeparturePicker}
               >
-                <Text style={styles.dateSelectionLabel}>NGÀY ĐI</Text>
+                <Text style={styles.dateSelectionLabel}>{t("00065")}</Text>
                 <Text style={styles.dateSelectionValue}>{format(toDate, 'dd/MM/yyyy')}</Text>
               </TouchableOpacity>
             </View>
@@ -146,7 +148,7 @@ const CustomDatePicker: React.FC<DatePickerProps> = ({
             {showPersonSelection && (
               <View style={styles.personSelection}>
                 <View style={styles.personSelectionRow}>
-                  <Text style={styles.personSelectionLabel}>KHÁCH</Text>
+                  <Text style={styles.personSelectionLabel}>{t("00066")}</Text>
                   <View style={styles.personCountContainer}>
                     <TouchableOpacity 
                       style={styles.countButton} 
@@ -169,7 +171,7 @@ const CustomDatePicker: React.FC<DatePickerProps> = ({
             )}
 
             <TouchableOpacity style={styles.applyButton} onPress={handleApply}>
-              <Text style={styles.applyButtonText}>{applyButtonText}</Text>
+              <Text style={styles.applyButtonText}>{t("00079")}</Text>
             </TouchableOpacity>
           </View>
         </View>

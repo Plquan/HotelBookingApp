@@ -1,31 +1,17 @@
 import { StyleSheet } from 'react-native';
+import { Theme } from '@/providers/ThemeContext';
 
-export const styles = StyleSheet.create({
+export const createStyles = (theme: Theme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#333',
+    backgroundColor: theme.background,
   },
   content: {
     flex: 1,
     padding: 16,
-    backgroundColor:'#222'
+    backgroundColor: theme.content,
   },
-  headerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-  },
-  headerBackButton: {
-    padding: 5,
-  },
-  headerTitle: {
-    flex: 1,
-    textAlign: 'center',
-    color: '#fff',
-    fontSize: 15,
-    fontWeight: 'bold',
-  },
+
   // New login button styles
   loginButton: {
     flexDirection: 'row',
@@ -36,7 +22,7 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 12,
     marginVertical: 16,
-    backgroundColor: '#2a2a2a',
+    backgroundColor: theme.background,
   },
   loginButtonText: {
     color: '#B58E50',
@@ -50,7 +36,7 @@ export const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '500',
-    color: 'white',
+    color: theme.text,
     marginBottom: 8,
   },
   required: {
@@ -59,14 +45,14 @@ export const styles = StyleSheet.create({
   inputContainer: {
     position: 'relative',
     borderWidth: 1,
-    borderColor: '#555',
+    borderColor: theme.borderInput,
     borderRadius: 8,
-    backgroundColor: '#2a2a2a',
+    backgroundColor: theme.background,
     height: 50,
     justifyContent: 'center',
   },
   input: {
-    color: 'white',
+    color: theme.text,
     paddingHorizontal: 16,
     fontSize: 16,
     height: '100%',
@@ -107,7 +93,7 @@ export const styles = StyleSheet.create({
   discountedPrice: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: 'white',
+    color: theme.text,
   },
   taxInfo: {
     fontSize: 14,
@@ -128,11 +114,11 @@ export const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#333',
+    backgroundColor: theme.background,
     paddingVertical: 10,
     paddingHorizontal: 16,
     borderTopWidth: 1,
-    borderTopColor: '#444',
+    borderTopColor: theme.borderInput,
   },
   bookingButtonText: {
     color: 'white',

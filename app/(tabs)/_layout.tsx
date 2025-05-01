@@ -1,52 +1,53 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
 import { Platform } from 'react-native';
-
 import { HapticTab } from '@/components/ui/Tab/HapticTab';
 import { IconSymbol } from '@/components/ui/Icon/IconSymbol';
-import TabBarBackground from '@/components/ui/Tab/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { useTheme } from '@/providers/ThemeContext';
+import { useTranslate } from '@/hooks/useTranslate';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const { theme, themeMode } = useTheme();
+  const t = useTranslate();
 
   return (
     <Tabs
-    screenOptions={{
-      tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-      headerShown: false,
-      tabBarButton: HapticTab,
-      tabBarBackground: TabBarBackground,
-      tabBarStyle: Platform.select({
-        ios: {
-          position: 'absolute',
-          backgroundColor: '#111', 
-          height: 85,            
-          borderTopWidth: 1,       
-          borderTopColor: '#555',  
-          shadowOffset: { width: 0, height: -5 }, 
-          shadowOpacity: 0.1,       
-          shadowRadius: 5,          
-        },
-        default: {
-          backgroundColor: '#111',
-          height: 85,
-        },
-      }),
-    }}
+      screenOptions={{
+        tabBarActiveTintColor: '#B58E50',
+        tabBarInactiveTintColor: themeMode ? '#666' : '#999',
+        headerShown: false,
+        tabBarButton: HapticTab,
+        tabBarStyle: Platform.select({
+          ios: {
+            position: 'absolute',
+            backgroundColor: theme.background,
+            height: 80,
+            borderTopWidth: 1,
+            borderTopColor: theme.borderInput,
+            shadowOffset: { width: 0, height: -5 },
+            shadowOpacity: themeMode ? 0.2 : 0.1,
+            shadowRadius: 5,
+          },
+          default: {
+            backgroundColor: theme.background,
+            height: 80,
+            borderTopColor: theme.borderInput,
+            borderTopWidth: 1,
+          },
+        }),
+      }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tìm kiếm',
+          title: t("00108"),
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="magnifyingglass" color={color} />,
         }}
       />
      <Tabs.Screen
           name="saved"
           options={{
-            title: 'Đã lưu',
+            title: t("00109"),
             tabBarIcon: ({ color, focused }) => (
               <IconSymbol
                 size={28}
@@ -59,7 +60,7 @@ export default function TabLayout() {
        <Tabs.Screen
         name="booked"
         options={{
-          title: 'Đã đặt',
+          title: t("00110"),
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="suitcase.fill" color={color} />,
         }}
       />
@@ -67,7 +68,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="setting"
         options={{
-          title: 'Cài đặt',
+          title: t("00111"),
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="gearshape.fill" color={color} />,
         }}
       />

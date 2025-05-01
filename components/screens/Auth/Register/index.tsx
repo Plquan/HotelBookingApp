@@ -22,8 +22,15 @@ import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
 import VerificationModal from './components/VerificationModal';
 import CustomButton from '@/components/ui/Button';
 import BackButton from '@/components/ui/ButtonBack';
+import { useTheme } from '@/providers/ThemeContext';
+import { createStyles } from './Register.style';
+import CustomHeader from '@/components/ui/CustomHeader';
+import { useTranslate } from '@/hooks/useTranslate';
 
 export default function RegisterScreen() {
+  const t = useTranslate();
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('');
@@ -112,7 +119,7 @@ export default function RegisterScreen() {
 
   const handleVerifyCode = async () => {
     if (verificationCode.length !== 4) {
-      setErrorMessage('Vui lòng nhập đủ 4 chữ số');
+      setErrorMessage(t("00016"));
       return;
     }
     try {
@@ -134,7 +141,7 @@ export default function RegisterScreen() {
         });
         router.navigate('login'); 
       } else {
-        setErrorMessage('Mã xác thực không đúng');
+        setErrorMessage(t("00017"));
       }
     } catch (error) {
       console.log(error);
@@ -184,23 +191,27 @@ export default function RegisterScreen() {
         <View style={styles.container}>
           <LoadingOverlayView visible={isLoading} text="Xin chờ trong giây lát" />
           
-          <View style={styles.header}>
-            <BackButton /> 
-            <Text style={styles.logoText}>Đăng kí tài khoản</Text>
-            <View style={styles.emptySpace} />
-          </View>
+
+          <CustomHeader 
+                title={t("00002")} 
+                showBackButton={true}
+            />
 
           <View style={styles.content}>
-            <Image
-              style={styles.titleImage}
-              source={require('@/assets/images/sky-logo-header.png')}
-              resizeMode="contain"
-            />
+            <View style={styles.logoContainer}>
+              <Image
+                style={styles.titleImage}
+                source={require('@/assets/images/skyline-logo.png')}
+                resizeMode="contain"
+              />
+              <Text style={styles.logoText}>SKYLINE</Text>
+            </View>
+            
 
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
-                placeholder="Tên đăng nhập"
+                placeholder={t("00006")} 
                 placeholderTextColor="#888"
                 keyboardType="default"
                 autoCapitalize="none"
@@ -224,7 +235,7 @@ export default function RegisterScreen() {
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
-                placeholder="Số điện thoại"
+                placeholder={t("00007")} 
                 placeholderTextColor="#888"
                 keyboardType="numeric"
                 autoCapitalize="none"
@@ -236,7 +247,7 @@ export default function RegisterScreen() {
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
-                placeholder="Mật khẩu"
+                placeholder={t("00008")} 
                 placeholderTextColor="#888"
                 secureTextEntry={!showPassword}
                 value={password}
@@ -257,7 +268,7 @@ export default function RegisterScreen() {
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
-                placeholder="Nhập lại mật khẩu"
+                placeholder={t("00009")} 
                 placeholderTextColor="#888"
                 secureTextEntry={!showPassword}
                 value={confirmPassWord}
@@ -276,7 +287,7 @@ export default function RegisterScreen() {
             </View>
 
             <CustomButton
-              title="Tạo tài khoản"
+              title={t("00002")} 
               onPress={handleRegister}
               style={styles.registerButton}
             />
@@ -301,64 +312,4 @@ export default function RegisterScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#000',
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'space-between',
-    backgroundColor: '#1a1a1a',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  logoText: {
-    fontSize: 18,
-    color: '#fff',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  emptySpace: {
-    width: 24,
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 20,
-  },
-  titleImage: {
-    width: '100%',
-    height: 60,
-    marginBottom: 30,
-  },
-  inputContainer: {
-    position: 'relative',
-    marginBottom: 15,
-  },
-  input: {
-    backgroundColor: '#2a2a2a',
-    color: '#fff',
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    fontSize: 16,
-    borderWidth: 1,
-    borderColor: '#3a3a3a',
-  },
-  eyeIcon: {
-    position: 'absolute',
-    right: 16,
-    top: '50%',
-    transform: [{ translateY: -10 }],
-  },
-  registerButton: {
-    marginTop: 20,
-    marginBottom: 20,
-  },
-});
+

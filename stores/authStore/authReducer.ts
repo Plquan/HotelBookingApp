@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ICurrentUser } from "@/interfaces/auth/AuthType";
-import {getAccessToken} from "@/utils/functions/accessToken";
+import {getAccessToken,removeAccessToken} from "@/utils/functions/accessToken";
 import { authThunks } from "./authThunk";
-
+import Toast from "react-native-toast-message";
 export interface AuthState {
     token: string | null;
     isAuthenticated: boolean;
@@ -28,6 +28,10 @@ export interface AuthState {
             state.token = null;
             state.isAuthenticated = false;
             state.currentUser = null;
+            removeAccessToken();
+        },
+        updateCurrentUser: (state, action) => {
+            state.currentUser = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -44,6 +48,21 @@ export interface AuthState {
             state.isAuthenticated = false;
             state.loading = false;
           });
+
+        builder
+          .addCase(authThunks.updateProfile.pending, (state) => {
+              state.loading = true;
+              state.error = null;
+            })
+            .addCase(authThunks.updateProfile.fulfilled, (state, action) => {
+
+              state.currentUser = action.payload.data ?? state.currentUser;
+              state.loading = false;
+            })
+            .addCase(authThunks.updateProfile.rejected, (state, action) => {
+              state.loading = false;
+              state.error = action.payload as string;
+            });
     }
   })
 
