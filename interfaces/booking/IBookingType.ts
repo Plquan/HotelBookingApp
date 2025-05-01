@@ -1,4 +1,3 @@
-import { Double } from "react-native/Libraries/Types/CodegenTypes";
 
 export interface ICheckDate{
     roomTypeId?: number;

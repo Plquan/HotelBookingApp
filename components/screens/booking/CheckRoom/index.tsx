@@ -105,8 +105,12 @@ export default function CheckRoomScreen() {
   
   
   const handleBooking = () => {
-    const totalRooms = chooseRoom.reduce((sum, item) => sum + item.number, 0);
-    if (Number(personCount) > totalRooms) {
+    const totalCapacity = chooseRoom.reduce((sum, item) => {
+      const roomDetails = availableRooms.find(ar => ar.id === item.roomTypeId);
+      const roomCapacity = (roomDetails?.capacity || 1) * item.number;
+      return sum + roomCapacity;
+    }, 0);
+    if (Number(personCount) > totalCapacity) {
       Toast.show({
         type: 'info',
         text1: `Không đủ phòng cho ${Number(personCount)} người! `,
@@ -177,7 +181,7 @@ export default function CheckRoomScreen() {
             </View>
             <View style={styles.locationContainer}>
               <MaterialIcons name="person" size={14} color="#666" />
-              <Text style={styles.locationText}>Số lượng: 5 người 1 phòng</Text>
+              <Text style={styles.locationText}>Số lượng: {item.capacity} người 1 phòng</Text>
             </View>
 
             <View style={styles.priceQuantityContainer}>
