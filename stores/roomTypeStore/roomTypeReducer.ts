@@ -23,6 +23,9 @@ export const roomTypeSlice = createSlice({
     reducers: {    
         removeSavedRoom: (state, action) => {
             state.savedRoom = state.savedRoom.filter(room => room.id !== action.payload);
+        },
+        resetSavedRoomData:(state) => {
+          state.savedRoom = []
         }
     },
     extraReducers: (builder) => {

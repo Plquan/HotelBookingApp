@@ -24,6 +24,8 @@ import CustomHeader from '@/components/ui/CustomHeader';
 import { useTheme } from '@/providers/ThemeContext';
 import { createStyles } from './login.style';
 import { useTranslate } from '@/hooks/useTranslate';
+import { roomTypeAction } from '@/stores/roomTypeStore/roomTypeReducer';
+import { bookingAction } from '@/stores/bookingStore/bookingReducer';
 
 export default function LoginScreen() {
   const t = useTranslate();
@@ -57,6 +59,8 @@ export default function LoginScreen() {
        if(res.isSuccess){
         await AsyncStorage.setItem("accessToken", res.data?.accessToken || '');
         dispatch(authAction.getCurrentUser())
+        dispatch(roomTypeAction.getListSavedRoom())
+        dispatch(bookingAction.getBooked())
         router.back()
        }
        else{

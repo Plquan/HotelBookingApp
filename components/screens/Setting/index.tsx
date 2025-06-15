@@ -25,6 +25,8 @@ import { useTheme } from '@/providers/ThemeContext';
 import { createStyles } from './Setting.style';
 const {IMAGE_URL} = env;
 import { useTranslate } from '@/hooks/useTranslate';
+import { bookingAction } from '@/stores/bookingStore/bookingReducer';
+import { roomTypeAction } from '@/stores/roomTypeStore/roomTypeReducer';
 
 export default function SettingScreen() {
   const t = useTranslate();
@@ -67,7 +69,9 @@ export default function SettingScreen() {
            try {
             setIsLoading(true)
             await authSevices.logout();
-            dispatch(authAction.logout());
+            dispatch(authAction.logout())
+            dispatch(bookingAction.resetBookedRoomData())
+            dispatch(roomTypeAction.resetSavedRoomData())
            } catch (error) {
             console.log('lỗi đăng xuất')
            }

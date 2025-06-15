@@ -64,7 +64,10 @@ export const bookingSlice = createSlice({
       if (booking) {
         booking.status = status;
       }
-    }
+    },
+      resetBookedRoomData:(state) => {
+          state.bookedRoom = []
+        }
     // setBookedRoom: (state, action: PayloadAction<IBookedData[]>) => {
     //   state.bookedRoom = action.payload;
     // },

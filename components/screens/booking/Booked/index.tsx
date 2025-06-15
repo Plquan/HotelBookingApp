@@ -77,7 +77,7 @@ const BookedScreen = () => {
 
   useEffect(() => {
     dispatch(bookingAction.getBooked());
-  }, []);
+  }, [dispatch]);
 
   const handleTabPress = (tabName: string) => {
     setActiveTab(tabName);
