@@ -19,7 +19,21 @@ const getBooked = createAsyncThunk(
     }
 )
 
+const cancelBooking = createAsyncThunk(
+  "booking/cancelBooking",
+  async (_, { rejectWithValue }): Promise<IResponseBase<any>> => {
+    try {
+      const response: IResponseBase<any> = await http.delete(`/api/Booking/CancelBooking`);
+      return response;
+    } catch (error: any) {
+      console.log("error cancel booking", error);
+      return rejectWithValue(error.data) as any;
+    }
+  }
+);
+
 const bookingThunks = {
-  getBooked
+  getBooked,
+  cancelBooking
 }
 export default bookingThunks;

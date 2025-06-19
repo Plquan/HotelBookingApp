@@ -6,6 +6,7 @@ import {
   Image,
   FlatList,
   StatusBar,
+  RefreshControl,
 } from 'react-native';
 import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -43,7 +44,7 @@ export default function CheckRoomScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
-
+  const [refreshing, setRefreshing] = useState(false);
   const checkAvailableRoom = async () => {
       dispatch(bookingAction.setBookingData({
           fromDate:fromDate.toISOString(),
@@ -65,6 +66,13 @@ export default function CheckRoomScreen() {
       setIsLoading(false);
     }
   };
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    checkAvailableRoom().finally(() => {
+      setRefreshing(false);
+    });
+  }, [dispatch]);
 
   useEffect(() => {
     setFromDate(new Date(bookingData.fromDate));
@@ -232,6 +240,12 @@ export default function CheckRoomScreen() {
         renderItem={renderHotelItem}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.listContainer}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
       />
            <View style={styles.bookingButtonWrapper}>
                <CustomButton

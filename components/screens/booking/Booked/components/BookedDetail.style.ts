@@ -87,5 +87,20 @@ export const createStyles = (theme: Theme) => StyleSheet.create({
     totalRow: { marginTop: 16, borderTopWidth: 1, borderTopColor: theme.borderInput, paddingTop: 16 },
     totalLabel: { color: theme.text, fontSize: 16, fontWeight: 'bold' },
     totalValue: { color: '#b58e50', fontSize: 18, fontWeight: 'bold' },
+    cancelButtonContainer: {
+      paddingHorizontal: 16,
+      paddingVertical: 20,
+    },
+    cancelButton: {
+      backgroundColor: '#FF3B30',
+      paddingVertical: 12,
+      borderRadius: 8,
+      alignItems: 'center',
+    },
+    cancelButtonText: {
+      color: '#FFFFFF',
+      fontSize: 16,
+      fontWeight: '600',
+    },
   });
   

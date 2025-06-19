@@ -46,7 +46,7 @@ export default function BookingConfirmationModal({ visible, onClose, bookingCode
   const handleClose = () => {
     onClose(); 
     setTimeout(() => {
-      router.push('/(tabs)'); // Navigate to home after modal animation completes
+      router.replace("/(tabs)"); // Navigate to home after modal animation completes
     }, 300); // Wait for modal close animation
   };
 

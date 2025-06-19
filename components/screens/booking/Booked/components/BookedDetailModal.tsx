@@ -16,6 +16,11 @@ import { getStatusInfo } from '@/constants/Status';
 import { useTheme } from '@/providers/ThemeContext';
 import { createStyles } from './BookedDetail.style';
 import { useTranslate } from '@/hooks/useTranslate';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/stores';
+import { bookingAction } from '@/stores/bookingStore/bookingReducer';
+import Toast from 'react-native-toast-message';
+import LoadingOverlayView from '@/components/common/Loading/LoadingOverlay';
 
 
 const formatDateToVietnamese = (date: Date) => {
@@ -34,13 +39,26 @@ export default function BookedDetailModal({ visible, onClose, room }: BookedDeta
   const t = useTranslate();
   const { theme } = useTheme();
   const styles = createStyles(theme);
+  const dispatch = useDispatch<AppDispatch>();
+  const {loading} = useSelector((state: RootState) => state.bookingStore);
+
   if (!room) return null;
 
   // Lấy thông tin label, màu chữ và màu nền từ helper
   const { label, color, backgroundColor } = getStatusInfo(room.status || '', t);
 
+  const handleCancelBooking = async () => {
+      await dispatch(bookingAction.cancelBooking());
+      await dispatch(bookingAction.getBooked())
+      onClose();
+  };
+
+  const showCancelButton = ['Pending', 'Confirmed', 'CheckIn'].includes(room.status || '');
+
   return (
-    <Modal
+    <>
+    <LoadingOverlayView visible={loading} text="Đang cập nhật..." />
+     <Modal
       visible={visible}
       animationType="slide"
       transparent={true}
@@ -138,11 +156,25 @@ export default function BookedDetailModal({ visible, onClose, room }: BookedDeta
             </View>
           </View>
 
+          {/* Add Cancel Button */}
+          {showCancelButton && (
+            <View style={styles.cancelButtonContainer}>
+              <TouchableOpacity 
+                style={styles.cancelButton}
+                onPress={handleCancelBooking}
+              >
+                <Text style={styles.cancelButtonText}>Hủy đặt phòng</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
           {/* Add bottom padding */}
           <View style={{ height: 20 }} />
         </ScrollView>
       </SafeAreaView>
     </Modal>
+    </>
+   
   );
 }
 

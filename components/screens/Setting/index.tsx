@@ -88,7 +88,7 @@ export default function SettingScreen() {
   if (!isAuthenticated) {
     return (
         <SafeAreaView style={styles.safeArea}>
-          <ScrollView contentContainerStyle={styles.container}>
+          <ScrollView contentContainerStyle={styles.container} >
             <View style={styles.loginWrapper}>
               <View style={styles.avatarContainer}>
                 <FontAwesome5 name="user" size={60} color="#fff" />

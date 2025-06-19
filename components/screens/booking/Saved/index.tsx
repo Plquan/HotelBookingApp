@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
+  RefreshControl,
 } from 'react-native';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
@@ -29,7 +30,7 @@ export default function SavedScreen() {
     const {savedRoom, loading} = useSelector(
         (state: RootState) => state.roomTypeStore
     );
-
+    const [refreshing, setRefreshing] = useState(false);
     useEffect(() => {
         dispatch(roomTypeAction.getListSavedRoom());
     }, [dispatch]);
@@ -46,7 +47,12 @@ export default function SavedScreen() {
             </TouchableOpacity>
         </View>
     );
-
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        dispatch(roomTypeAction.getListSavedRoom()).finally(() => {
+          setRefreshing(false);
+        });
+      }, [dispatch]);
     const renderRoomItem = ({ item }: { item: ICheckRoomData }) => (
         <TouchableOpacity
             activeOpacity={0.8}
@@ -113,6 +119,12 @@ export default function SavedScreen() {
                     ListEmptyComponent={renderEmptyState}
                     keyExtractor={item => item.id.toString()}
                     contentContainerStyle={styles.listContent}
+                    refreshControl={
+                        <RefreshControl
+                          refreshing={refreshing}
+                          onRefresh={onRefresh}
+                        />
+                      }
                 />
             </View>
         </SafeAreaView>

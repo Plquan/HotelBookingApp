@@ -10,6 +10,7 @@ import {
   ImageBackground,
   ScrollView,
   SafeAreaView,
+  RefreshControl,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -36,7 +37,7 @@ export default function HomeScreen() {
   const [showArrivalPicker, setShowArrivalPicker] = useState(false);
   const [showDeparturePicker, setShowDeparturePicker] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
-
+  const [refreshing, setRefreshing] = useState(false);
   const router = useRouter();
     
   const handleCheckRoom = () => {
@@ -55,6 +56,13 @@ export default function HomeScreen() {
   
   useEffect(() => {
     dispatch(roomTypeAction.getRoomTypeData());
+  }, [dispatch]);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    dispatch(roomTypeAction.getRoomTypeData()).finally(() => {
+      setRefreshing(false);
+    });
   }, [dispatch]);
 
   const roomTypeData = useSelector((state: RootState) => state.roomTypeStore.roomTypes);
@@ -107,6 +115,12 @@ export default function HomeScreen() {
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
       >
         <View style={styles.content}>
           {/* Banner */}

@@ -6,6 +6,7 @@ import {
   StatusBar,
   Image,
   ScrollView,
+  RefreshControl,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather, Ionicons } from '@expo/vector-icons';
@@ -37,19 +38,24 @@ const BookedScreen = () => {
   const [activeTab, setActiveTab] = useState('active');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<IBookedData>();
+  const [refreshing, setRefreshing] = useState(false);
 
   const dispatch = useDispatch<AppDispatch>();
   const {bookedRoom,loading} = useSelector((state: RootState) => state.bookingStore);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    dispatch(bookingAction.getBooked()).finally(() => {
+      setRefreshing(false);
+    });
+  }, [dispatch]);
 
   useEffect(() => {
     let isSubscribed = true;
 
     const initializeSocket = async () => {
       try {
-        // First ensure connection is stopped
         await socketService.stopConnection();
-        
-        // Then start new connection
         await socketService.startConnection();
 
         if (isSubscribed) {
@@ -58,7 +64,7 @@ const BookedScreen = () => {
               dispatch(bookingAction.updateBookedRoomStatus({ 
                 bookingId: data.bookingId, 
                 status: data.status 
-              }));
+              }))
             }
           });
         }
@@ -78,6 +84,7 @@ const BookedScreen = () => {
   useEffect(() => {
     dispatch(bookingAction.getBooked());
   }, [dispatch]);
+
 
   const handleTabPress = (tabName: string) => {
     setActiveTab(tabName);
@@ -144,7 +151,15 @@ const BookedScreen = () => {
         </TouchableOpacity>
       </View>
       
-      <ScrollView style={styles.content}>
+      <ScrollView 
+        style={styles.content}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+      >
         {filteredRooms.map((room) => {
           const { label, color, backgroundColor } = getStatusInfo(room.status || '', t);
           return (

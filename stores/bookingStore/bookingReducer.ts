@@ -4,6 +4,7 @@ import { IRoomTypeData } from "@/interfaces/roomType/IRoomDTO";
 import { IBookingRequestData } from "@/interfaces/booking/IBookingType";
 import { ISelectedRoom } from "@/interfaces/booking/IBookingType";
 import { IBookedData } from "@/interfaces/booking/IBookedType";
+import { Toast } from "react-native-toast-message/lib/src/Toast";
 
 interface BookingState {
   loading: boolean;
@@ -86,6 +87,32 @@ export const bookingSlice = createSlice({
       .addCase(bookingThunks.getBooked.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch booked rooms";
+      })
+      .addCase(bookingThunks.cancelBooking.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+
+
+      .addCase(bookingThunks.cancelBooking.fulfilled, (state, action) => {
+        const booking = state.bookedRoom.find(b => b.id === action.payload.data);
+        if (booking) {
+          booking.status = 'Cancelled';
+        }
+        state.loading = false;
+        state.error = null;
+        Toast.show({
+          type: 'success',
+          text1: 'Hủy đặt phòng thành công',
+        });
+      })
+      .addCase(bookingThunks.cancelBooking.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to cancel booking";
+        Toast.show({
+          type: 'error',
+          text1: action.error.message,
+        });
       });
   },
 });
